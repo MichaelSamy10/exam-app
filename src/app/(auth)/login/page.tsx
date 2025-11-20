@@ -1,12 +1,17 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import React from "react";
+import Link from "next/link";
+import LoginForm from "./_components/login-form";
 
 export default function LoginPage() {
   return (
-    <div className="m-5">
-      <Label htmlFor="email">Email</Label>
-      <Input className="w-80" type="email" placeholder="Email" />
+    <div className="w-[452px] m-auto">
+      <h2 className="font-secondary font-bold text-3xl mb-10">Login</h2>
+      <LoginForm />
+      <div className="text-center text-gray-500 mt-9">
+        Don’t have an account?&nbsp;
+        <Link className="text-primary text-sm" href={"/register"}>
+          Create yours
+        </Link>
+      </div>
     </div>
   );
 }
