@@ -202,7 +202,7 @@ export default function ForgotForm() {
           <Form {...otpForm}>
             <form
               onSubmit={otpForm.handleSubmit(handleOTP)}
-              className="space-y-4"
+              className="space-y-6"
             >
               <FormField
                 control={otpForm.control}
@@ -236,21 +236,20 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
+              {receiveCode ? (
+                <div className="text-center text-gray-500 mt-6">
+                  You can request another code in: {timeLeft}
+                </div>
+              ) : (
+                <div className="text-center text-gray-500">
+                  Didn’t receive the code? Resend
+                </div>
+              )}
               <Button className="w-full mt-10 mb-9" type="submit">
                 Verify Code
               </Button>
             </form>
           </Form>
-
-          {receiveCode ? (
-            <div className="text-center text-gray-500 mt-6">
-              You can request another code in: {timeLeft}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500">
-              Didn’t receive the code? Resend
-            </div>
-          )}
 
           {/* <Button
           onClick={() => {
