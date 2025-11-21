@@ -1,29 +1,33 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ResetPasswordForm } from "@/lib/types/auth";
 import { LucideEyeOff, LucideEye } from "lucide-react";
-
 import React, { useState } from "react";
-import { ControllerRenderProps, ControllerFieldState } from "react-hook-form";
+import {
+  ControllerRenderProps,
+  ControllerFieldState,
+  FieldValues,
+} from "react-hook-form";
 
-interface passwordFieldProps
+interface PasswordFieldProps<TFieldValues extends FieldValues>
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  field: ControllerRenderProps<ResetPasswordForm>;
+  field: ControllerRenderProps<TFieldValues>;
   fieldState: ControllerFieldState;
+  id?: string;
   autoComplete?: string;
 }
 
-export default function PasswordField({
+export default function PasswordField<TFieldValues extends FieldValues>({
   field,
   fieldState,
+  id,
   autoComplete = "new-password",
-}: passwordFieldProps) {
+}: PasswordFieldProps<TFieldValues>) {
   const [show, setShow] = useState(false);
 
   return (
     <div className="relative">
       <Input
         {...field}
+        id={id}
         type={show ? "text" : "password"}
         placeholder="********"
         autoComplete={autoComplete}

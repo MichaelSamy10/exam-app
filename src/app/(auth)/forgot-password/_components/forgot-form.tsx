@@ -7,9 +7,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { MoveLeft, MoveRight } from "lucide-react";
+import { CircleX, MoveLeft, MoveRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import PasswordField from "../../register/_components/password-field";
+import PasswordField from "./password-field";
 import {
   FormField,
   FormItem,
@@ -25,7 +25,7 @@ import {
   resetPassword,
   verifyResetCode,
 } from "@/lib/actions/auth.action";
-import { ResetPasswordForm } from "@/lib/types/auth";
+import { ResetPasswordFields } from "@/lib/types/auth";
 import { useRouter } from "next/navigation";
 
 type Step = "forgot" | "otp" | "changePass";
@@ -45,7 +45,7 @@ export default function ForgotForm() {
       otp: "",
     },
   });
-  const resetForm = useForm<ResetPasswordForm>({
+  const resetForm = useForm<ResetPasswordFields>({
     defaultValues: {
       newPassword: "",
       confirmPassword: "",
@@ -55,48 +55,42 @@ export default function ForgotForm() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [receiveCode, setReceiveCode] = useState(true);
 
-  // const [email, setEmail] = useState("");
-  // const [emailError, setEmailError] = useState(false);
-
   const handleContinue: SubmitHandler<{ email: string }> = async (values) => {
     try {
-      const res = await forgotPassword(values.email);
-      console.log("OTP Sent", res);
+      const response = await forgotPassword(values.email);
+
+      if (response) {
+        setStep("otp");
+      }
     } catch (err: any) {
-      // setError(err.message);
+      forogtForm.setError("root", {
+        message: err.message || "Something went wrong",
+      });
     }
-
-    // const trimmedEmail = email.trim();
-
-    // if (!trimmedEmail) {
-    //   setEmailError(true);
-    //   return;
-    // }
-
-    setStep("otp");
   };
 
   const handleOTP: SubmitHandler<{ otp: string }> = async (values) => {
     try {
-      const res = await verifyResetCode(values.otp);
-      console.log("Verify OTP", res);
+      await verifyResetCode(values.otp);
+
+      setStep("changePass");
     } catch (err: any) {
-      // setError(err.message);
+      otpForm.setError("root", {
+        message: err.message || "Something went wrong",
+      });
     }
-    setStep("changePass");
   };
 
-  const handleReset: SubmitHandler<ResetPasswordForm> = async (values) => {
+  const handleReset: SubmitHandler<ResetPasswordFields> = async (values) => {
     try {
-      const res = await resetPassword(
-        forogtForm.getValues("email"),
-        values.newPassword
-      );
-      console.log("Password reset");
+      await resetPassword(forogtForm.getValues("email"), values.newPassword);
+
+      route.push("/login?reset=success");
     } catch (err: any) {
-      // setError(err.message);
+      resetForm.setError("root", {
+        message: err.message || "Something went wrong",
+      });
     }
-    route.push("/login");
   };
 
   useEffect(() => {
@@ -110,7 +104,6 @@ export default function ForgotForm() {
           setReceiveCode(false);
           return 0;
         }
-        // console.log(prev);
         return prev - 1;
       });
     }, 1000);
@@ -162,6 +155,22 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
+              {forogtForm.formState.errors.root && (
+                <div className="border border-red-600 bg-red-50 p-2">
+                  <div className="relative mx-auto">
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
+                      <CircleX
+                        className="text-red-500 fill-white"
+                        width={18}
+                        height={18}
+                      />
+                    </div>
+                    <p className="text-red-600 text-center text-sm">
+                      {forogtForm.formState.errors.root?.message}
+                    </p>
+                  </div>
+                </div>
+              )}
               <Button className="w-full mb-9" type="submit">
                 Continue <MoveRight width={18} height={18} />
               </Button>

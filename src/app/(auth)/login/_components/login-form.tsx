@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
 import { LucideEyeOff, LucideEye, CircleX } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
@@ -20,9 +19,6 @@ import { LoginFields } from "@/lib/types/auth";
 
 export default function LoginForm() {
   const [show, setShow] = useState(false);
-  // const [email, setEmail] = useState("");
-  //   const [password, setPassword] = useState("");
-  // const [errors, setErrors] = useState({ email: false, password: false });
 
   const form = useForm<LoginFields>({
     defaultValues: {
@@ -31,42 +27,37 @@ export default function LoginForm() {
     },
   });
   const handleLogin: SubmitHandler<LoginFields> = async (values) => {
-    // const newErrors = {
-    //   email: !email.trim(),
-    //   password: !password.trim(),
-    // };
-    //   if (response?.ok) {
-    //     const callBackUrl =
-    //       new URLSearchParams(location.search).get("callbackUrl") ||
-    //       "/dashboard";
-    //     return (location.href = callBackUrl);
-    //   } else {
-    //     console.log(response?.error);
-    //   }
-    // } else {
-    //   setErrors(newErrors);
-    //   if (newErrors.email || newErrors.password) return;
-    // }
+    try {
+      const { email, password } = values;
 
-    const { email, password } = values;
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    const response = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+      // If signIn throws an error or returns undefined
+      if (!response) {
+        throw new Error("Unexpected error occurred");
+      }
 
-    if (response?.ok) {
-      console.log("OK");
-      const callBackUrl =
-        new URLSearchParams(location.search).get("callbackUrl") || "/dashboard";
-      return (location.href = callBackUrl);
+      if (response.ok) {
+        const callbackUrl =
+          new URLSearchParams(location.search).get("callbackUrl") ||
+          "/dashboard";
+
+        return (location.href = callbackUrl);
+      }
+
+      throw new Error(response.error || "Login failed, please try again");
+    } catch (err: any) {
+      form.setError("root", {
+        message: err.message || "Something went wrong",
+      });
     }
-    form.setError("root", {
-      message: response?.error || "Login Failed, please try again",
-    });
   };
 
+  // console.log(form.formState.errors?.root);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-7">
@@ -100,6 +91,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+        {/* Password */}
         <FormField
           control={form.control}
           name="password"
@@ -111,15 +103,13 @@ export default function LoginForm() {
           }}
           render={({ field }) => (
             <FormItem>
-              {/* Label */}
-              <FormLabel>Password</FormLabel>
-
-              {/* Field */}
+              <FormLabel htmlFor="password">Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     placeholder="********"
+                    id="password"
                     type={show ? "text" : "password"}
                     hasError={!!form.formState.errors.password}
                     autoComplete="off"
@@ -137,8 +127,6 @@ export default function LoginForm() {
                   </button>
                 </div>
               </FormControl>
-
-              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -149,7 +137,7 @@ export default function LoginForm() {
             Forgot your password?
           </Link>
         </div>
-        {form.formState.isSubmitted && !form.formState.isValid && (
+        {form.formState.errors.root && (
           <div className="border border-red-600 bg-red-50 p-2">
             <div className="relative mx-auto">
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
@@ -160,7 +148,7 @@ export default function LoginForm() {
                 />
               </div>
               <p className="text-red-600 text-center text-sm">
-                Something went wrong
+                {form.formState.errors.root?.message}
               </p>
             </div>
           </div>

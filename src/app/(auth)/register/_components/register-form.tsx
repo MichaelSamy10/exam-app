@@ -3,119 +3,221 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
-import { Label } from "@radix-ui/react-label";
+import PasswordField from "../../forgot-password/_components/password-field";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import PasswordField from "./password-field";
+import { RegisterFields } from "@/lib/types/auth";
+import { registerUser } from "@/lib/actions/auth.action";
 
 export default function RegisterForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: false, password: false });
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<RegisterFields>({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      username: "",
+      email: "",
+      phone: "",
+      password: "",
+      rePassword: "",
+    },
+  });
 
-    const newErrors = {
-      email: !email.trim(),
-      password: !password.trim(),
-    };
+  const handleRegister: SubmitHandler<RegisterFields> = async (values) => {
+    try {
+      const response = await registerUser(values);
+      // console.log("Form values:", values);
 
-    if (email.trim() === "" || password.trim() === "") {
-      setErrors(newErrors);
+      if (response.ok) {
+        router.push("/dashboard");
+      }
+    } catch (err: any) {
+      form.setError("root", { message: err.message || "Something went wrong" });
     }
-
-    if (newErrors.email || newErrors.password) return;
-
-    router.push("/dashboard");
   };
+
   return (
-    <form onSubmit={handleLogin}>
-      <div className="flex flex-col gap-4">
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleRegister)}
+        className="flex flex-col gap-4"
+      >
+        {/* First Name & Last Name */}
         <div className="flex gap-2">
-          <div>
-            <Label htmlFor="firstName">First Name</Label>
-            <Input
-              hasError={errors.email}
-              value={email}
-              id="firstName"
-              type="text"
-              placeholder="Ahmed"
-              onChange={(e) => setEmail(e.target.value)}
-              errorMessage={errors.email ? "Your email is required" : ""}
-            />
-          </div>
-          <div>
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              hasError={errors.email}
-              value={email}
-              id="lastName"
-              type="text"
-              placeholder="Abdullah"
-              onChange={(e) => setEmail(e.target.value)}
-              errorMessage={errors.email ? "Your email is required" : ""}
-            />
-          </div>
-        </div>
-        <div>
-          <Label htmlFor="username">Username</Label>
-          <Input
-            hasError={errors.email}
-            value={email}
-            id="username"
-            type="text"
-            placeholder="user123"
-            onChange={(e) => setEmail(e.target.value)}
-            errorMessage={errors.email ? "Your email is required" : ""}
+          <FormField
+            control={form.control}
+            name="firstName"
+            rules={{ required: "First Name is required" }}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Ahmed"
+                    hasError={!!fieldState.error}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            rules={{ required: "Last Name is required" }}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Abdullah"
+                    hasError={!!fieldState.error}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            hasError={errors.email}
-            value={email}
-            id="email"
-            type="email"
-            placeholder="user@example.com"
-            onChange={(e) => setEmail(e.target.value)}
-            errorMessage={errors.email ? "Your email is required" : ""}
-          />
-        </div>
-        <PhoneInput
-          placeholder="1012345678"
-          id="phone"
-          className="mt-0"
-          errorMessage=""
+
+        {/* Username */}
+        <FormField
+          control={form.control}
+          name="username"
+          rules={{ required: "Username is required" }}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="user123"
+                  hasError={!!fieldState.error}
+                  autoComplete="off"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
-        <PasswordField
-          label="Password"
-          value={password}
-          id="password"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
-          hasError={errors.password}
-          errorMessage={errors.password ? "Your password is required" : ""}
+        {/* Email */}
+        <FormField
+          control={form.control}
+          name="email"
+          rules={{
+            required: "Email is required",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org)$/,
+              message: "Please enter a valid email address",
+            },
+          }}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="user@example.com"
+                  hasError={!!fieldState.error}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
-        <PasswordField
-          label="Confirm Password"
-          value={password}
-          id="confirmPassword"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
-          hasError={errors.password}
-          errorMessage={errors.password ? "Your password is required" : ""}
+        {/* Phone */}
+        <FormField
+          control={form.control}
+          name="phone"
+          rules={{ required: "Phone is required" }}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Phone</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  {...field}
+                  placeholder="1012345678"
+                  hasError={!!fieldState.error}
+                  autoComplete="off"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
-        <Button className="w-full mb-9" type="submit">
+        {/* Password */}
+        <FormField
+          control={form.control}
+          name="password"
+          rules={{ required: "Password is required" }}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <PasswordField field={field} fieldState={fieldState} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {/* Confirm Password */}
+        <FormField
+          control={form.control}
+          name="rePassword"
+          rules={{
+            required: "Confirm Password is required",
+            validate: (value) =>
+              value === form.getValues("password") || "Passwords do not match",
+          }}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <PasswordField field={field} fieldState={fieldState} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {form.formState.errors.root && (
+          <div className="border border-red-600 bg-red-50 p-2">
+            <div className="relative mx-auto">
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
+                <CircleX
+                  className="text-red-500 fill-white"
+                  width={18}
+                  height={18}
+                />
+              </div>
+              <p className="text-red-600 text-center text-sm">
+                {form.formState.errors.root.message}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <Button className="w-full mt-4 mb-9" type="submit">
           Create Account
         </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }

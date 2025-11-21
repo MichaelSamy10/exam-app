@@ -30,10 +30,6 @@ export const authOptions: NextAuthOptions = {
           }
         );
 
-        // if (!response.ok) {
-        //   throw new Error("Failed to sign in");
-        // }
-
         const payload: ApiResponse<LoginResponse> = await response.json();
 
         if ("code" in payload) {
