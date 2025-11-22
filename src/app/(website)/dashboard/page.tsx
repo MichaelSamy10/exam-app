@@ -1,8 +1,8 @@
 "use client";
 
-import { authOptions } from "@/auth";
+// import { authOptions } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 
 export default function Home() {

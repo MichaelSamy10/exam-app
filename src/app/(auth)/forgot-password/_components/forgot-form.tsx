@@ -19,7 +19,6 @@ import {
   Form,
 } from "@/components/ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
-// import { LoginFields } from "@/lib/types/auth";
 import {
   forgotPassword,
   resetPassword,
@@ -30,17 +29,17 @@ import { useRouter } from "next/navigation";
 
 type Step = "forgot" | "otp" | "changePass";
 
-type OTPFormValues = { otp: string };
+// type OTPFormValues = { otp: string };
 
 export default function ForgotForm() {
   const route = useRouter();
   const [step, setStep] = useState<Step>("forgot");
-  const forogtForm = useForm<{ email: string }>({
+  const forgotForm = useForm<{ email: string }>({
     defaultValues: {
       email: "",
     },
   });
-  const otpForm = useForm<OTPFormValues>({
+  const otpForm = useForm<{ otp: string }>({
     defaultValues: {
       otp: "",
     },
@@ -62,10 +61,10 @@ export default function ForgotForm() {
       if (response) {
         setStep("otp");
       }
-    } catch (err: any) {
-      forogtForm.setError("root", {
-        message: err.message || "Something went wrong",
-      });
+    } catch (err: unknown) {
+      const message = (err as Error).message ?? "Something went wrong";
+
+      forgotForm.setError("root", { message });
     }
   };
 
@@ -74,22 +73,22 @@ export default function ForgotForm() {
       await verifyResetCode(values.otp);
 
       setStep("changePass");
-    } catch (err: any) {
-      otpForm.setError("root", {
-        message: err.message || "Something went wrong",
-      });
+    } catch (err: unknown) {
+      const message = (err as Error).message ?? "Something went wrong";
+
+      otpForm.setError("root", { message });
     }
   };
 
   const handleReset: SubmitHandler<ResetPasswordFields> = async (values) => {
     try {
-      await resetPassword(forogtForm.getValues("email"), values.newPassword);
+      await resetPassword(forgotForm.getValues("email"), values.newPassword);
 
       route.push("/login?reset=success");
-    } catch (err: any) {
-      resetForm.setError("root", {
-        message: err.message || "Something went wrong",
-      });
+    } catch (err: unknown) {
+      const message = (err as Error).message ?? "Something went wrong";
+
+      resetForm.setError("root", { message });
     }
   };
 
@@ -121,13 +120,13 @@ export default function ForgotForm() {
           <p className="mb-10 text-gray-500">
             Don’t worry, we will help you recover your account.
           </p>
-          <Form {...forogtForm}>
+          <Form {...forgotForm}>
             <form
-              onSubmit={forogtForm.handleSubmit(handleContinue)}
+              onSubmit={forgotForm.handleSubmit(handleContinue)}
               className="space-y-10"
             >
               <FormField
-                control={forogtForm.control}
+                control={forgotForm.control}
                 name="email"
                 rules={{
                   required: {
@@ -145,7 +144,7 @@ export default function ForgotForm() {
                       <Input
                         {...field}
                         placeholder="user@example.com"
-                        hasError={!!forogtForm.formState.errors.email}
+                        hasError={!!forgotForm.formState.errors.email}
                         autoComplete="email"
                       />
                     </FormControl>
@@ -155,7 +154,7 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
-              {forogtForm.formState.errors.root && (
+              {forgotForm.formState.errors.root && (
                 <div className="border border-red-600 bg-red-50 p-2">
                   <div className="relative mx-auto">
                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
@@ -166,7 +165,7 @@ export default function ForgotForm() {
                       />
                     </div>
                     <p className="text-red-600 text-center text-sm">
-                      {forogtForm.formState.errors.root?.message}
+                      {forgotForm.formState.errors.root?.message}
                     </p>
                   </div>
                 </div>
@@ -188,7 +187,7 @@ export default function ForgotForm() {
           <p className="mb-10 text-gray-500">
             Please enter the 6-digits code we have sent to:{" "}
             <span className="text-gray-800">
-              {forogtForm.getValues("email")}
+              {forgotForm.getValues("email")}
             </span>
             .{" "}
             <span
@@ -276,7 +275,13 @@ export default function ForgotForm() {
               className="space-y-6"
             >
               {/* Hidden email field */}
-              {/* <input type="hidden" {...resetForm.register("newPassword")} /> */}
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                className="hidden"
+                aria-hidden="true"
+              />
 
               {/* Confirm New Password */}
               <FormField

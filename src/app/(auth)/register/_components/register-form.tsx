@@ -15,7 +15,6 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 import { RegisterFields } from "@/lib/types/auth";
 import { registerUser } from "@/lib/actions/auth.action";
 
@@ -42,8 +41,10 @@ export default function RegisterForm() {
       if (response.ok) {
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      form.setError("root", { message: err.message || "Something went wrong" });
+    } catch (err: unknown) {
+      const message = (err as Error).message ?? "Something went wrong";
+
+      form.setError("root", { message });
     }
   };
 

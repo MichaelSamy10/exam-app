@@ -42,8 +42,8 @@ export async function resetPassword(email: string, newPassword: string) {
     const result = await res.json();
 
     return { ok: true, result };
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    throw new Error(error instanceof Error ? error.message : String(error));
   }
 }
 
@@ -60,7 +60,10 @@ export async function registerUser(payload: RegisterFields) {
     const data = await res.json();
 
     return { ok: true, data };
-  } catch (err: any) {
-    return { ok: false, error: err.message || "Something went wrong" };
+  } catch (err: unknown) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Something went wrong",
+    };
   }
 }
