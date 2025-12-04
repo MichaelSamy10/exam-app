@@ -7,7 +7,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { CircleX, MoveLeft, MoveRight } from "lucide-react";
+import { MoveLeft, MoveRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import PasswordField from "./password-field";
 import {
@@ -24,72 +24,102 @@ import {
   resetPassword,
   verifyResetCode,
 } from "@/lib/actions/auth.action";
-import { ResetPasswordFields } from "@/lib/types/auth";
+import { OtpFields, ResetFields } from "@/lib/types/auth";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { forgotPasswordSchema, resetSchema } from "@/lib/schemas/auth.schema";
+import FormError from "@/components/shared/form-error";
 
 type Step = "forgot" | "otp" | "changePass";
 
-// type OTPFormValues = { otp: string };
-
 export default function ForgotForm() {
-  const route = useRouter();
+  const router = useRouter();
   const [step, setStep] = useState<Step>("forgot");
-  const forgotForm = useForm<{ email: string }>({
-    defaultValues: {
-      email: "",
-    },
-  });
-  const otpForm = useForm<{ otp: string }>({
-    defaultValues: {
-      otp: "",
-    },
-  });
-  const resetForm = useForm<ResetPasswordFields>({
-    defaultValues: {
-      newPassword: "",
-      confirmPassword: "",
-    },
-  });
 
   const [timeLeft, setTimeLeft] = useState(60);
   const [receiveCode, setReceiveCode] = useState(true);
 
+  const forgotForm = useForm<{ email: string }>({
+    defaultValues: {
+      email: "",
+    },
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
+  const otpForm = useForm<OtpFields>({
+    defaultValues: {
+      resetCode: "",
+    },
+  });
+
+  const resetForm = useForm<ResetFields>({
+    defaultValues: {
+      newPassword: "",
+      confirmPassword: "",
+    },
+    resolver: zodResolver(resetSchema),
+  });
+
   const handleContinue: SubmitHandler<{ email: string }> = async (values) => {
-    try {
-      const response = await forgotPassword(values.email);
+    const response = await forgotPassword(values);
 
-      if (response) {
-        setStep("otp");
-      }
-    } catch (err: unknown) {
-      const message = (err as Error).message ?? "Something went wrong";
+    if (!response.ok) {
+      forgotForm.setError("root", { message: response.error });
+      return;
+    }
 
-      forgotForm.setError("root", { message });
+    setReceiveCode(true);
+    setStep("otp");
+  };
+
+  const resendCode = async () => {
+    setReceiveCode(true);
+    setTimeLeft(5);
+
+    toast({
+      title: "A new OTP code has been sent",
+    });
+    const response = await forgotPassword({
+      email: forgotForm.getValues("email"),
+    });
+
+    if (!response.ok) {
+      forgotForm.setError("root", { message: response.error });
+      return;
     }
   };
 
-  const handleOTP: SubmitHandler<{ otp: string }> = async (values) => {
-    try {
-      await verifyResetCode(values.otp);
-
-      setStep("changePass");
-    } catch (err: unknown) {
-      const message = (err as Error).message ?? "Something went wrong";
-
-      otpForm.setError("root", { message });
+  const handleOTP: SubmitHandler<OtpFields> = async (values) => {
+    const response = await verifyResetCode(values);
+    if (!response.ok) {
+      console.log(response.error);
+      otpForm.setError("root", { message: response.error });
+      return;
     }
+
+    resetForm.setValue("email", forgotForm.getValues().email);
+
+    setStep("changePass");
   };
 
-  const handleReset: SubmitHandler<ResetPasswordFields> = async (values) => {
-    try {
-      await resetPassword(forgotForm.getValues("email"), values.newPassword);
+  const handleReset: SubmitHandler<ResetFields> = async (values) => {
+    const payload = {
+      email: forgotForm.getValues("email"),
+      newPassword: values.newPassword,
+    };
 
-      route.push("/login?reset=success");
-    } catch (err: unknown) {
-      const message = (err as Error).message ?? "Something went wrong";
+    const response = await resetPassword(payload);
 
-      resetForm.setError("root", { message });
+    if (!response.ok) {
+      resetForm.setError("root", { message: response.error });
+      return;
     }
+
+    toast({
+      title: "Password Reset Successfully",
+    });
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -108,7 +138,7 @@ export default function ForgotForm() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [step]);
+  }, [step, receiveCode]);
 
   return (
     <div>
@@ -136,10 +166,9 @@ export default function ForgotForm() {
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    {/* Label */}
+                    {/* Email */}
                     <FormLabel>Email</FormLabel>
 
-                    {/* Field */}
                     <FormControl>
                       <Input
                         {...field}
@@ -154,22 +183,11 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
+
               {forgotForm.formState.errors.root && (
-                <div className="border border-red-600 bg-red-50 p-2">
-                  <div className="relative mx-auto">
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
-                      <CircleX
-                        className="text-red-500 fill-white"
-                        width={18}
-                        height={18}
-                      />
-                    </div>
-                    <p className="text-red-600 text-center text-sm">
-                      {forgotForm.formState.errors.root?.message}
-                    </p>
-                  </div>
-                </div>
+                <FormError form={forgotForm} />
               )}
+
               <Button className="w-full mb-9" type="submit">
                 Continue <MoveRight width={18} height={18} />
               </Button>
@@ -180,7 +198,10 @@ export default function ForgotForm() {
       {step === "otp" && (
         <div>
           <MoveLeft
-            onClick={() => setStep("forgot")}
+            onClick={() => {
+              setStep("forgot");
+              otpForm.reset();
+            }}
             className="mb-10 border-2 border-gray-200 w-10 h-10 p-2 cursor-pointer"
           />
           <h2 className="font-secondary font-bold text-3xl mb-2">Verify OTP</h2>
@@ -192,11 +213,15 @@ export default function ForgotForm() {
             .{" "}
             <span
               className="text-blue-600 underline cursor-pointer"
-              onClick={() => setStep("forgot")}
+              onClick={() => {
+                setStep("forgot");
+                otpForm.reset();
+              }}
             >
               Edit
             </span>
           </p>
+
           {/* OTP */}
           <Form {...otpForm}>
             <form
@@ -205,32 +230,41 @@ export default function ForgotForm() {
             >
               <FormField
                 control={otpForm.control}
-                name="otp"
+                name="resetCode"
                 rules={{
                   required: "OTP is required",
                   minLength: { value: 6, message: "OTP must be 6 digits" },
                 }}
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mb-5">
                       <InputOTP
                         maxLength={6}
                         value={field.value}
                         onChange={field.onChange}
                       >
                         <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
+                          {Array.from({ length: 6 }, (_, index) => (
+                            <InputOTPSlot
+                              key={index}
+                              index={index}
+                              className={
+                                fieldState.error &&
+                                "border-red-600 focus:border-red-600"
+                              }
+                            />
+                          ))}
                         </InputOTPGroup>
                       </InputOTP>
                     </div>
 
                     {fieldState.error && (
-                      <FormMessage>{fieldState.error.message}</FormMessage>
+                      <FormMessage className="text-center">
+                        {fieldState.error.message}
+                      </FormMessage>
+                    )}
+                    {otpForm.formState.errors.root && (
+                      <FormError form={otpForm} />
                     )}
                   </FormItem>
                 )}
@@ -241,7 +275,16 @@ export default function ForgotForm() {
                 </div>
               ) : (
                 <div className="text-center text-gray-500">
-                  Didn’t receive the code? Resend
+                  Didn’t receive the code?{" "}
+                  <span
+                    className="text-blue-600 cursor-pointer"
+                    onClick={() => {
+                      resendCode();
+                      otpForm.reset();
+                    }}
+                  >
+                    Resend
+                  </span>
                 </div>
               )}
               <Button className="w-full mt-10 mb-9" type="submit">
@@ -249,16 +292,6 @@ export default function ForgotForm() {
               </Button>
             </form>
           </Form>
-
-          {/* <Button
-          onClick={() => {
-            toast({
-              title: "Your changes have been saved.",
-            });
-          }}
-        >
-          Show Toast
-        </Button>  */}
         </div>
       )}
       {step === "changePass" && (
@@ -287,13 +320,6 @@ export default function ForgotForm() {
               <FormField
                 control={resetForm.control}
                 name="newPassword"
-                rules={{
-                  required: "New password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                }}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>New Password</FormLabel>
@@ -307,13 +333,6 @@ export default function ForgotForm() {
               <FormField
                 control={resetForm.control}
                 name="confirmPassword"
-                rules={{
-                  required: "New password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                }}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>Confirm New Password</FormLabel>
@@ -324,6 +343,9 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
+              {resetForm.formState.errors.root && (
+                <FormError form={resetForm} />
+              )}
 
               <Button className="w-full mb-9" type="submit">
                 Reset Password

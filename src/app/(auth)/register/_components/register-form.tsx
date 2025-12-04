@@ -13,10 +13,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CircleX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { RegisterFields } from "@/lib/types/auth";
 import { registerUser } from "@/lib/actions/auth.action";
+import { registerSchema } from "@/lib/schemas/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormError from "@/components/shared/form-error";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -31,21 +33,27 @@ export default function RegisterForm() {
       password: "",
       rePassword: "",
     },
+    resolver: zodResolver(registerSchema),
   });
 
   const handleRegister: SubmitHandler<RegisterFields> = async (values) => {
-    try {
-      const response = await registerUser(values);
-      // console.log("Form values:", values);
+    const editPhone = form.getValues("phone").replace(/^\+?20/, "") || "";
+    const payload = {
+      ...values,
+      phone: editPhone,
+    };
 
-      if (response.ok) {
-        router.push("/dashboard");
-      }
-    } catch (err: unknown) {
-      const message = (err as Error).message ?? "Something went wrong";
+    const response = await registerUser(payload);
 
-      form.setError("root", { message });
+    if (!response.ok) {
+      form.setError("root", {
+        message: response.error || "Something went wrong",
+      });
+
+      return;
     }
+
+    router.push("/dashboard");
   };
 
   return (
@@ -59,7 +67,6 @@ export default function RegisterForm() {
           <FormField
             control={form.control}
             name="firstName"
-            rules={{ required: "First Name is required" }}
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>First Name</FormLabel>
@@ -67,7 +74,7 @@ export default function RegisterForm() {
                   <Input
                     {...field}
                     placeholder="Ahmed"
-                    hasError={!!fieldState.error}
+                    hasError={Boolean(fieldState.error)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -77,7 +84,6 @@ export default function RegisterForm() {
           <FormField
             control={form.control}
             name="lastName"
-            rules={{ required: "Last Name is required" }}
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
@@ -85,7 +91,7 @@ export default function RegisterForm() {
                   <Input
                     {...field}
                     placeholder="Abdullah"
-                    hasError={!!fieldState.error}
+                    hasError={Boolean(fieldState.error)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -98,7 +104,6 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="username"
-          rules={{ required: "Username is required" }}
           render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
@@ -106,7 +111,7 @@ export default function RegisterForm() {
                 <Input
                   {...field}
                   placeholder="user123"
-                  hasError={!!fieldState.error}
+                  hasError={Boolean(fieldState.error)}
                   autoComplete="off"
                 />
               </FormControl>
@@ -119,13 +124,6 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="email"
-          rules={{
-            required: "Email is required",
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org)$/,
-              message: "Please enter a valid email address",
-            },
-          }}
           render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
@@ -134,7 +132,7 @@ export default function RegisterForm() {
                   {...field}
                   type="email"
                   placeholder="user@example.com"
-                  hasError={!!fieldState.error}
+                  hasError={Boolean(fieldState.error)}
                 />
               </FormControl>
               <FormMessage />
@@ -146,15 +144,15 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="phone"
-          rules={{ required: "Phone is required" }}
           render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <FormControl>
                 <PhoneInput
                   {...field}
+                  maxLength={11}
                   placeholder="1012345678"
-                  hasError={!!fieldState.error}
+                  hasError={Boolean(fieldState.error)}
                   autoComplete="off"
                 />
               </FormControl>
@@ -167,13 +165,13 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="password"
-          rules={{ required: "Password is required" }}
           render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <PasswordField field={field} fieldState={fieldState} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -182,11 +180,6 @@ export default function RegisterForm() {
         <FormField
           control={form.control}
           name="rePassword"
-          rules={{
-            required: "Confirm Password is required",
-            validate: (value) =>
-              value === form.getValues("password") || "Passwords do not match",
-          }}
           render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
@@ -197,23 +190,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-
-        {form.formState.errors.root && (
-          <div className="border border-red-600 bg-red-50 p-2">
-            <div className="relative mx-auto">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
-                <CircleX
-                  className="text-red-500 fill-white"
-                  width={18}
-                  height={18}
-                />
-              </div>
-              <p className="text-red-600 text-center text-sm">
-                {form.formState.errors.root.message}
-              </p>
-            </div>
-          </div>
-        )}
+        {form.formState.errors.root && <FormError form={form} />}
 
         <Button className="w-full mt-4 mb-9" type="submit">
           Create Account

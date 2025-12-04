@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LucideEyeOff, LucideEye, CircleX } from "lucide-react";
+import { LucideEyeOff, LucideEye } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginFields } from "@/lib/types/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/lib/schemas/auth.schema";
+import FormError from "@/components/shared/form-error";
+import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const [show, setShow] = useState(false);
@@ -25,7 +30,9 @@ export default function LoginForm() {
       email: "",
       password: "",
     },
+    resolver: zodResolver(loginSchema),
   });
+
   const handleLogin: SubmitHandler<LoginFields> = async (values) => {
     try {
       const { email, password } = values;
@@ -36,7 +43,6 @@ export default function LoginForm() {
         redirect: false,
       });
 
-      // If signIn throws an error or returns undefined
       if (!response) {
         throw new Error("Unexpected error occurred");
       }
@@ -57,7 +63,17 @@ export default function LoginForm() {
     }
   };
 
-  // console.log(form.formState.errors?.root);
+  const { toast } = useToast();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("toast") === "password-changed") {
+      toast({
+        title: "Your Password has been changed",
+      });
+    }
+  }, [searchParams, toast]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-7">
@@ -65,12 +81,6 @@ export default function LoginForm() {
         <FormField
           control={form.control}
           name="email"
-          rules={{
-            required: {
-              value: true,
-              message: "Your email is required",
-            },
-          }}
           render={({ field }) => (
             <FormItem>
               {/* Label */}
@@ -95,12 +105,6 @@ export default function LoginForm() {
         <FormField
           control={form.control}
           name="password"
-          rules={{
-            required: {
-              value: true,
-              message: "Your Password is required",
-            },
-          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="password">Password</FormLabel>
@@ -118,6 +122,7 @@ export default function LoginForm() {
                     type="button"
                     onClick={() => setShow(!show)}
                     className="absolute right-2 top-3 text-sm text-gray-500"
+                    tabIndex={-1}
                   >
                     {show ? (
                       <LucideEyeOff width={18} height={18} />
@@ -137,26 +142,12 @@ export default function LoginForm() {
             Forgot your password?
           </Link>
         </div>
-        {form.formState.errors.root && (
-          <div className="border border-red-600 bg-red-50 p-2">
-            <div className="relative mx-auto">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
-                <CircleX
-                  className="text-red-500 fill-white"
-                  width={18}
-                  height={18}
-                />
-              </div>
-              <p className="text-red-600 text-center text-sm">
-                {form.formState.errors.root?.message}
-              </p>
-            </div>
-          </div>
-        )}
+        {form.formState.errors.root && <FormError form={form} />}
+
         <Button
           className="w-full"
           type="submit"
-          disabled={!form.formState.isValid && form.formState.isSubmitted}
+          // disabled={!form.formState.isValid && form.formState.isSubmitted}
         >
           Login
         </Button>
@@ -164,74 +155,3 @@ export default function LoginForm() {
     </Form>
   );
 }
-
-//  <form onSubmit={onSubmit}>
-//       <div className="flex flex-col gap-4">
-//         <div>
-//           <Label htmlFor="email">Email</Label>
-//           <Input
-//             hasError={errors.email}
-//             value={email}
-//             id="email"
-//             type="email"
-//             placeholder="user@example.com"
-//             onChange={(e) => setEmail(e.target.value)}
-//             errorMessage={errors.email ? "Your email is required" : ""}
-//             autoComplete="email"
-//           />
-//         </div>
-//         <div className="flex flex-col relative">
-//           <Label
-//             htmlFor="password"
-//             className="block text-sm font-medium text-gray-700"
-//           >
-//             Password
-//           </Label>
-//           <Input
-//             hasError={errors.password}
-//             id="password"
-//             type={show ? "text" : "password"}
-//             placeholder="********"
-//             onChange={(e) => setPassword(e.target.value)}
-//             errorMessage={errors.password ? "Your password is required" : ""}
-//             autoComplete="new-password"
-//           />
-//           <button
-//             type="button"
-//             onClick={() => setShow(!show)}
-//             className="absolute right-2 top-8 text-sm text-gray-500"
-//           >
-//             {show ? (
-//               <LucideEyeOff width={18} height={18} />
-//             ) : (
-//               <LucideEye width={18} height={18} />
-//             )}
-//           </button>
-//         </div>
-//         <div className="text-end ">
-//           <Link href={"/forgot-password"} className="text-primary text-sm">
-//             Forgot your password?
-//           </Link>
-//         </div>
-//         {(errors.email || errors.password) && (
-//           <div className="border border-red-600 bg-red-50 p-2">
-//             <div className="relative mx-auto">
-//               <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
-//                 <CircleX
-//                   className="text-red-500 fill-white"
-//                   width={18}
-//                   height={18}
-//                 />
-//               </div>
-//               <p className="text-red-600 text-center text-sm">
-//                 Something went wrong
-//               </p>
-//             </div>
-//           </div>
-//         )}
-
-//         <Button className="w-full mb-9" type="submit">
-//           Login
-//         </Button>
-//       </div>
-//     </form>

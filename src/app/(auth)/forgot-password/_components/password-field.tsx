@@ -31,14 +31,15 @@ export default function PasswordField<TFieldValues extends FieldValues>({
         type={show ? "text" : "password"}
         placeholder="********"
         autoComplete={autoComplete}
-        hasError={!!fieldState.error}
+        hasError={Boolean(fieldState.error)}
       />
 
       {/* Toggle Button */}
       <button
         type="button"
         onClick={() => setShow(!show)}
-        className="absolute right-3 top-3 text-gray-500"
+        className="absolute right-3 top-3 text-gray-400"
+        tabIndex={-1}
       >
         {show ? (
           <LucideEyeOff width={18} height={18} />

@@ -1,20 +1,28 @@
-"use client";
+// "use client";
 
 // import { authOptions } from "@/auth";
-import { Button } from "@/components/ui/button";
 // import { getServerSession } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+// import { signOut, useSession } from "next-auth/react";
+import { GraduationCap } from "lucide-react";
+import DashboardHeading from "./_components/dashboard-heading";
+import DiplomaCard from "./_components/diploma-card";
+import BreadCrumb from "./_components/breadcrumb";
 
-export default function Home() {
+export default async function Home() {
   // const session = await getServerSession(authOptions);
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   return (
-    <div>
-      <p>
-        {/* {session?.user?.firstName} {session?.user?.lastName} */}
-        {session?.user?.firstName} {session?.user?.lastName}
-      </p>
-      <Button onClick={() => signOut()}>Logout</Button>
-    </div>
+    <>
+      <BreadCrumb />
+
+      <div className="bg-gray-50 p-6 min-h-screen">
+        <DashboardHeading
+          backButton={false}
+          title="Diplomas"
+          icon={<GraduationCap width={45} height={45} />}
+        />
+        <DiplomaCard />
+      </div>
+    </>
   );
 }

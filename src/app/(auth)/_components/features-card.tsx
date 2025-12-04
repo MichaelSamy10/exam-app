@@ -4,21 +4,19 @@ import Image from "next/image";
 export default function FeaturesCard() {
   const features = [
     {
-      icon: <Brain width={24} height={24} className="text-primary" />,
+      icon: <Brain />,
       title: "Tailored Diplomas",
       description:
         "Choose from specialized tracks like Frontend, Backend, and Mobile Development.",
     },
     {
-      icon: <BookOpenCheck width={24} height={24} className="text-primary" />,
+      icon: <BookOpenCheck />,
       title: "Focused Exams",
       description:
         "Access topic-specific tests including HTML, CSS, JavaScript, and more.",
     },
     {
-      icon: (
-        <RectangleEllipsis width={24} height={24} className="text-primary" />
-      ),
+      icon: <RectangleEllipsis />,
       title: "Smart Multi-Step Forms",
       description:
         "Choose from specialized tracks like Frontend, Backend, and Mobile Development.",
@@ -30,6 +28,7 @@ export default function FeaturesCard() {
         src="/assets/images/Overlay.png"
         alt="bg"
         fill
+        sizes="100%"
         style={{ filter: "blur(150px)" }}
         priority
       />
@@ -54,8 +53,8 @@ export default function FeaturesCard() {
           <div className="ms-5 flex flex-col">
             {features.map((item, id) => (
               <div key={id} className="flex mb-9">
-                <div className="border-2 w-[32px] h-[32px] border-blue-600 p-[3px] me-5 inline-flex items-center justify-center">
-                  {item.icon}
+                <div className="text-primary border-2 w-[32px] h-[32px] border-blue-600 p-[3px] me-5 inline-flex items-center justify-center">
+                  <span className="w-6 h-6">{item.icon}</span>
                 </div>
                 <div>
                   <h3 className="text-primary font-semibold text-xl mb-2">

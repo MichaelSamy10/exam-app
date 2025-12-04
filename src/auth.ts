@@ -45,10 +45,31 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.accessToken = user?.accessToken;
         token.user = user?.user;
+      }
+
+      if (trigger === "update") {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/profileData`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                token: token.accessToken as string,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const updatehUserData = await response.json();
+            token.user = updatehUserData.user;
+          }
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
       }
 
       return token;

@@ -14,7 +14,12 @@ export default async function middleware(request: NextRequest) {
   ) {
     if (token) return NextResponse.next();
 
+    if (!token && request.nextUrl.pathname !== "/login") {
+      return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
+    }
+
     const redirectUrl = new URL("/login", request.nextUrl.origin);
+
     redirectUrl.searchParams.set("callbackUrl", request.nextUrl.pathname);
 
     return NextResponse.redirect(redirectUrl);
@@ -25,26 +30,6 @@ export default async function middleware(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl.origin));
   }
-
-  //   if (
-  //     protectedRoutes.some((route) =>
-  //       new RegExp(route).test(request.nextUrl.pathname)
-  //     )
-  //   ) {
-  //     if (token) return NextResponse.next();
-
-  //     const redirectUrl = new URL("/login", request.nextUrl.origin);
-
-  //     redirectUrl.searchParams.set("callbackUrl", request.nextUrl.pathname);
-
-  //     return NextResponse.redirect(redirectUrl);
-  //   }
-
-  //   if (authRoutes.includes(request.nextUrl.pathname)) {
-  //     if (!token) return NextResponse.next();
-
-  //     return NextResponse.redirect(new URL("/", request.nextUrl.origin));
-  //   }
 
   return NextResponse.next();
 }

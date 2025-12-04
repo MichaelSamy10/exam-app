@@ -1,69 +1,59 @@
-import { RegisterFields } from "../types/auth";
+import {
+  ForgotResponse,
+  LoginResponse,
+  RegisterFields,
+  ResetFields,
+  ResetResponse,
+} from "../types/auth";
+import { AnswerCheckBody, CheckQuestionResponse } from "../types/questions";
+import { apiRequest } from "../utils/api-handler";
 
-export async function forgotPassword(email: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/auth/forgotPassword`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    }
+export function forgotPassword(data: { email: string }) {
+  return apiRequest<{ email: string }, ForgotResponse>(
+    "/auth/forgotPassword",
+    data,
+    "POST"
   );
-
-  return res.json();
 }
 
-export async function verifyResetCode(code: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/auth/verifyResetCode`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ resetCode: code }),
-    }
+export function verifyResetCode(data: { resetCode: string }) {
+  return apiRequest<{ resetCode: string }, { status: string }>(
+    "/auth/verifyResetCode",
+    data,
+    "POST"
   );
-
-  return res.json();
 }
 
-export async function resetPassword(email: string, newPassword: string) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/resetPassword`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, newPassword }),
-      }
-    );
-
-    const result = await res.json();
-
-    return { ok: true, result };
-  } catch (error: unknown) {
-    throw new Error(error instanceof Error ? error.message : String(error));
-  }
+export function resetPassword(data: ResetFields) {
+  return apiRequest<ResetFields, ResetResponse>(
+    "/auth/resetPassword",
+    data,
+    "PUT"
+  );
 }
 
-export async function registerUser(payload: RegisterFields) {
+export function registerUser(data: RegisterFields) {
+  return apiRequest<RegisterFields, LoginResponse>(
+    "/auth/signup",
+    data,
+    "POST"
+  );
+}
+
+export async function submitAnswers(answers: AnswerCheckBody) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+    const response = await fetch("/api/check-answers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ answers }),
     });
 
-    const data = await res.json();
-
-    return { ok: true, data };
-  } catch (err: unknown) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : "Something went wrong",
-    };
+    const data: CheckQuestionResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
