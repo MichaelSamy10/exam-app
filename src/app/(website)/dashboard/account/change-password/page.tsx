@@ -57,7 +57,7 @@ export default function ChangePassword() {
 
     setTimeout(async () => {
       await update();
-      window.location.href = "/dashboard";
+      window.location.reload();
     }, 2000);
   };
 
