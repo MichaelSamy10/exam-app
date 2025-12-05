@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { LucideEyeOff, LucideEye } from "lucide-react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Form,
   FormControl,
@@ -19,8 +19,6 @@ import { LoginFields } from "@/lib/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/lib/schemas/auth.schema";
 import FormError from "@/components/shared/form-error";
-import { useToast } from "@/hooks/use-toast";
-import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const [show, setShow] = useState(false);
@@ -62,17 +60,6 @@ export default function LoginForm() {
       form.setError("root", { message });
     }
   };
-
-  const { toast } = useToast();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    if (searchParams.get("toast") === "password-changed") {
-      toast({
-        title: "Your Password has been changed",
-      });
-    }
-  }, [searchParams, toast]);
 
   return (
     <Form {...form}>

@@ -1,4 +1,6 @@
 import { ChangePasswordPayload } from "../types/auth";
+import { setToken } from "../utils/manage-token";
+import { JWT } from "next-auth/jwt";
 
 export const changePassword = async (data: ChangePasswordPayload) => {
   try {
@@ -15,6 +17,10 @@ export const changePassword = async (data: ChangePasswordPayload) => {
     if ("code" in payload) {
       return { ok: false, error: payload.message };
     }
+
+    await setToken({
+      accessToken: payload.token,
+    } as JWT);
 
     return { ok: true, data: payload };
   } catch (err) {

@@ -71,8 +71,6 @@ export default function QuestionCard() {
   const handleNext = () => {
     if (currentIndex < numOfQuestions - 1) {
       setCurrentIndex((prev) => prev + 1);
-    } else {
-      alert("Quiz finished! Check console for results.");
     }
   };
 

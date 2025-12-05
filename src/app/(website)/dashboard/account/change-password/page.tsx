@@ -10,19 +10,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { changePassword } from "@/lib/actions/change-password.action";
 import { changePasswordSchema } from "@/lib/schemas/auth.schema";
 
 import { changePasswordFields } from "@/lib/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleX } from "lucide-react";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function ChangePassword() {
+  const { toast } = useToast();
+  const { update } = useSession();
+
   const form = useForm<changePasswordFields>({
     defaultValues: {
       currentPassword: "",
@@ -32,7 +34,6 @@ export default function ChangePassword() {
     resolver: zodResolver(changePasswordSchema),
   });
 
-  const router = useRouter();
   const handleReset: SubmitHandler<changePasswordFields> = async (values) => {
     const payload = {
       oldPassword: values.currentPassword,
@@ -50,10 +51,14 @@ export default function ChangePassword() {
       return;
     }
 
-    await signOut({ redirect: false });
-    setTimeout(() => {
-      router.push("/login?toast=password-changed");
-    }, 500);
+    toast({
+      title: "Your Password has been changed",
+    });
+
+    setTimeout(async () => {
+      await update();
+      window.location.href = "/dashboard";
+    }, 2000);
   };
 
   return (
