@@ -20,6 +20,7 @@ export default function PasswordField<TFieldValues extends FieldValues>({
   fieldState,
   id,
   autoComplete = "new-password",
+  autoFocus = false,
 }: PasswordFieldProps<TFieldValues>) {
   const [show, setShow] = useState(false);
 
@@ -32,6 +33,7 @@ export default function PasswordField<TFieldValues extends FieldValues>({
         placeholder="********"
         autoComplete={autoComplete}
         hasError={Boolean(fieldState.error)}
+        autoFocus={autoFocus}
       />
 
       {/* Toggle Button */}

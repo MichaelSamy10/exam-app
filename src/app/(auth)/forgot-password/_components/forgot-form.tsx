@@ -30,6 +30,7 @@ import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPasswordSchema, resetSchema } from "@/lib/schemas/auth.schema";
 import FormError from "@/components/shared/form-error";
+import { getOtpCookie, setOtpCookie } from "../utils/otp-cookies";
 
 type Step = "forgot" | "otp" | "changePass";
 
@@ -62,20 +63,36 @@ export default function ForgotForm() {
   });
 
   const handleContinue: SubmitHandler<{ email: string }> = async (values) => {
+    const storedTime = getOtpCookie(values.email);
+    const now = Math.floor(Date.now() / 1000);
+
+    if (storedTime) {
+      const diff = now - Number(storedTime);
+      if (diff < 60) {
+        setStep("otp");
+        setReceiveCode(true);
+        return;
+      }
+    } else {
+      // store time in cookies
+      setOtpCookie(values.email);
+      setStep("otp");
+      setReceiveCode(true);
+    }
+
     const response = await forgotPassword(values);
 
     if (!response.ok) {
       forgotForm.setError("root", { message: response.error });
       return;
     }
-
-    setReceiveCode(true);
-    setStep("otp");
   };
 
   const resendCode = async () => {
+    setOtpCookie(forgotForm.getValues("email"));
+
     setReceiveCode(true);
-    setTimeLeft(5);
+    setTimeLeft(60);
 
     toast({
       title: "A new OTP code has been sent",
@@ -93,7 +110,6 @@ export default function ForgotForm() {
   const handleOTP: SubmitHandler<OtpFields> = async (values) => {
     const response = await verifyResetCode(values);
     if (!response.ok) {
-      console.log(response.error);
       otpForm.setError("root", { message: response.error });
       return;
     }
@@ -124,8 +140,23 @@ export default function ForgotForm() {
 
   useEffect(() => {
     if (step !== "otp") return;
-    setTimeLeft(60);
 
+    const storedTime = getOtpCookie(forgotForm.getValues("email"));
+    const now = Math.floor(Date.now());
+
+    if (storedTime) {
+      const diff = Math.floor((now - Number(storedTime)) / 1000);
+      if (diff >= 60) {
+        // Time expired
+        setTimeLeft(0);
+        setReceiveCode(false);
+        console.log("I AM HERE");
+      } else {
+        // Time remaining
+        setTimeLeft(60 - diff);
+        setReceiveCode(true);
+      }
+    }
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -138,7 +169,7 @@ export default function ForgotForm() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [step, receiveCode]);
+  }, [step, forgotForm, receiveCode]);
 
   return (
     <div>
@@ -158,12 +189,6 @@ export default function ForgotForm() {
               <FormField
                 control={forgotForm.control}
                 name="email"
-                rules={{
-                  required: {
-                    value: true,
-                    message: "Your email is required",
-                  },
-                }}
                 render={({ field }) => (
                   <FormItem>
                     {/* Email */}
@@ -175,6 +200,7 @@ export default function ForgotForm() {
                         placeholder="user@example.com"
                         hasError={!!forgotForm.formState.errors.email}
                         autoComplete="email"
+                        autoFocus
                       />
                     </FormControl>
 
@@ -324,7 +350,11 @@ export default function ForgotForm() {
                   <FormItem>
                     <FormLabel>New Password</FormLabel>
                     <FormControl>
-                      <PasswordField field={field} fieldState={fieldState} />
+                      <PasswordField
+                        field={field}
+                        fieldState={fieldState}
+                        autoFocus
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

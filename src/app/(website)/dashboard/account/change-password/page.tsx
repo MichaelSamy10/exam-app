@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { changePassword } from "@/lib/actions/change-password.action";
 import { changePasswordSchema } from "@/lib/schemas/auth.schema";
@@ -52,7 +53,7 @@ export default function ChangePassword() {
     }
 
     toast({
-      title: "Your Password has been changed",
+      title: "Your Password has been updated.",
     });
 
     setTimeout(async () => {
@@ -84,13 +85,17 @@ export default function ChangePassword() {
             <FormItem>
               <FormLabel>Current Password</FormLabel>
               <FormControl>
-                <PasswordField field={field} fieldState={fieldState} />
+                <PasswordField
+                  field={field}
+                  fieldState={fieldState}
+                  autoFocus
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        <Separator className="mt-2 mb-2" />
         {/* New Password */}
         <FormField
           control={form.control}

@@ -20,7 +20,7 @@ export default function Questions() {
         ]}
       />
 
-      <div className="bg-gray-50 p-6">
+      <div className="bg-gray-50 p-6 min-h-screen">
         <DashboardHeading
           title={`[${examName}] Questions`}
           icon={<CircleQuestionMark width={45} height={45} />}

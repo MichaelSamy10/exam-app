@@ -80,6 +80,7 @@ export default function LoginForm() {
                   placeholder="user@example.com"
                   hasError={!!form.formState.errors.email}
                   autoComplete="email"
+                  autoFocus
                 />
               </FormControl>
 

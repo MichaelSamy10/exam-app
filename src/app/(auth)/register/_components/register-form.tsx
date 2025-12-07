@@ -75,6 +75,7 @@ export default function RegisterForm() {
                     {...field}
                     placeholder="Ahmed"
                     hasError={Boolean(fieldState.error)}
+                    autoFocus
                   />
                 </FormControl>
                 <FormMessage />

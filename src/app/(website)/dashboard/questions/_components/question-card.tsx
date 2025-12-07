@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { formatTime } from "../_utils/format-time";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/hooks/use-toast";
 
 export default function QuestionCard() {
   const searchParams = useSearchParams();
@@ -69,6 +70,18 @@ export default function QuestionCard() {
   };
 
   const handleNext = () => {
+    const currentAnswer = answers.find(
+      (a) => a.questionId === currentQuestion?._id
+    )?.correct;
+
+    if (!currentAnswer) {
+      toast({
+        title: "Please answer the question.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (currentIndex < numOfQuestions - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
@@ -149,7 +162,7 @@ export default function QuestionCard() {
                 {currentQuestion?.answers.map((item) => (
                   <div
                     key={item.key}
-                    className="flex gap-3 p-4 bg-gray-50 text-gray-800"
+                    className="flex gap-3 p-4 bg-gray-50 text-gray-800 hover:bg-gray-100"
                     onClick={() => handleSelect(item.key)}
                   >
                     <RadioGroupItem
