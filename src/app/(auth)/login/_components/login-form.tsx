@@ -71,7 +71,7 @@ export default function LoginForm() {
           render={({ field }) => (
             <FormItem>
               {/* Label */}
-              <FormLabel>Emai</FormLabel>
+              <FormLabel>Email</FormLabel>
 
               {/* Field */}
               <FormControl>
