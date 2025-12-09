@@ -27,12 +27,12 @@ export default function DiplomaCard() {
       {isLoading ? (
         <Spinner className="size-24 m-auto text-primary min-h-screen" />
       ) : (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid xl:grid-cols-3 sm:grid-cols-2 gap-2">
           {payload?.subjects.map((subject) => (
             <Link
               key={subject._id}
               href={`/dashboard/exams`}
-              className="relative w-[336px] h-[448px]"
+              className="relative xl:w-[336px] h-[448px]"
             >
               <Image
                 src={subject.icon}
@@ -42,7 +42,7 @@ export default function DiplomaCard() {
                 priority
                 className="object-cover"
               />
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-80 h-16 flex items-center justify-center text-white bg-[#155DFC]/50">
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-11/12 h-16 flex items-center justify-center text-white bg-[#155DFC]/50">
                 {subject.name}
               </div>
             </Link>

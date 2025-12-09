@@ -45,7 +45,7 @@ export default function LoginForm() {
         throw new Error("Unexpected error occurred");
       }
 
-      if (response.ok) {
+      if (response?.ok) {
         const callbackUrl =
           new URLSearchParams(location.search).get("callbackUrl") ||
           "/dashboard";
@@ -135,7 +135,7 @@ export default function LoginForm() {
         <Button
           className="w-full"
           type="submit"
-          // disabled={!form.formState.isValid && form.formState.isSubmitted}
+          disabled={!form.formState.isValid && form.formState.isSubmitted}
         >
           Login
         </Button>

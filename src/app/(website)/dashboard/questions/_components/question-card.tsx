@@ -92,6 +92,17 @@ export default function QuestionCard() {
   };
 
   const handleSubmit = useCallback(async () => {
+    const currentAnswer = answers.find(
+      (a) => a.questionId === currentQuestion?._id
+    )?.correct;
+
+    if (!currentAnswer) {
+      toast({
+        title: "Please answer the question.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       const payload = answers && answers.length ? answers : [];
 
@@ -101,7 +112,7 @@ export default function QuestionCard() {
     } catch (error) {
       console.error("Failed to submit answers:", error);
     }
-  }, [answers]);
+  }, [answers, currentQuestion]);
 
   useEffect(() => {
     if (durationSeconds > 0 && timeLeft === null) {

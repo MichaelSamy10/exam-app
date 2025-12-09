@@ -9,8 +9,6 @@ import DiplomaCard from "./_components/diploma-card";
 import BreadCrumb from "./_components/breadcrumb";
 
 export default async function Home() {
-  // const session = await getServerSession(authOptions);
-  // const { data: session } = useSession();
   return (
     <>
       <BreadCrumb />
