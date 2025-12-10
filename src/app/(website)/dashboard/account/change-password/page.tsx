@@ -66,7 +66,7 @@ export default function ChangePassword() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleReset)}
-        className="flex flex-col gap-4 bg-background p-6"
+        className="flex flex-col gap-4 bg-background p-6 min-h-screen"
       >
         {/* Hidden email field */}
         <input
