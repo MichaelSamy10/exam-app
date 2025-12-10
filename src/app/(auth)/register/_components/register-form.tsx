@@ -19,6 +19,7 @@ import { registerUser } from "@/lib/actions/auth.action";
 import { registerSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormError from "@/components/shared/form-error";
+import { toast } from "@/hooks/use-toast";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -53,6 +54,9 @@ export default function RegisterForm() {
       return;
     }
 
+    toast({
+      title: "Account created successfully",
+    });
     router.push("/dashboard");
   };
 
