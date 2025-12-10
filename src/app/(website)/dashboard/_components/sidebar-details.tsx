@@ -25,7 +25,7 @@ export default function SidebarDetails() {
   ];
 
   return (
-    <SidebarContent className="w-72 mt-14 ms-10">
+    <SidebarContent className="md:w-72 w-56 mt-14 ms-10">
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>

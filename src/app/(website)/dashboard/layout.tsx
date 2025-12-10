@@ -9,7 +9,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
       <div className="relative">
         <SidebarTrigger className="md:hidden absolute top-4 left-4 z-50" />
       </div>
-      <div className="min-h-screen flex-1 md:p-0 pt-9">{children}</div>
+      <div className=" flex-1 md:p-0 pt-9">{children}</div>
     </SidebarProvider>
   );
 }

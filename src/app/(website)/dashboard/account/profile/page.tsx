@@ -108,7 +108,7 @@ export default function Profile() {
           className="flex flex-col gap-4 bg-background p-6 min-h-screen"
         >
           {/* First Name & Last Name */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="lg:grid grid-cols-2 gap-2">
             <FormField
               control={form.control}
               name="firstName"
@@ -127,7 +127,7 @@ export default function Profile() {
               name="lastName"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel className="lg:m-0 mt-3">Last Name</FormLabel>
                   <FormControl>
                     <Input {...field} hasError={Boolean(fieldState.error)} />
                   </FormControl>
@@ -196,7 +196,7 @@ export default function Profile() {
           />
           {form.formState.errors.root && <FormError form={form} />}
 
-          <div className="mt-4 mb-9 grid grid-cols-2 gap-2">
+          <div className="mt-4 mb-9 grid lg:grid-cols-2 grid-row-2 gap-2">
             <DeleteDialog handleDelete={handleDelete} />
 
             <Button type="submit">Save changes</Button>

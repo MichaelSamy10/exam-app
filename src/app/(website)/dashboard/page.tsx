@@ -13,7 +13,7 @@ export default async function Home() {
     <>
       <BreadCrumb />
 
-      <div className="bg-gray-50 p-6 min-h-screen">
+      <div className="bg-gray-50 p-6 ">
         <DashboardHeading
           backButton={false}
           title="Diplomas"

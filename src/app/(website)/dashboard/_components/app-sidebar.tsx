@@ -21,7 +21,7 @@ export default async function AppSidebar() {
       </SidebarHeader>
       <SidebarDetails />
       <SidebarFooter>
-        <div className="flex flex-row gap-2 ms-10 mb-10">
+        <div className="flex flex-row gap-2 md:ms-10 md:mb-10">
           <div>
             <Image
               src="/assets/images/Avatar.svg"
@@ -30,7 +30,7 @@ export default async function AppSidebar() {
               height={54}
             />
           </div>
-          <div className="flex flex-row mt-2 me-1">
+          <div className="flex flex-row md:mt-2 md:me-1">
             <div>
               <h3 className="text-primary font-medium">
                 {session?.user?.firstName}
