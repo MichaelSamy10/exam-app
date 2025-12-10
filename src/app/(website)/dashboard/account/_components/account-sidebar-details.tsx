@@ -49,7 +49,7 @@ export default function SidebarDetails() {
                 <SidebarMenuButton
                   asChild
                   variant={"default"}
-                  className={`md:p-4 md:h-11 h-full  ${
+                  className={`lg:p-4 lg:h-11 h-full  ${
                     activeItem === item.title
                       ? "bg-blue-50 text-primary hover:text-primary"
                       : "text-gray-500 hover:bg-muted"
@@ -58,7 +58,7 @@ export default function SidebarDetails() {
                 >
                   <Link
                     href={item.url}
-                    className="flex md:flex-row flex-col items-center md:justify-start justify-center text-center"
+                    className="flex lg:flex-row flex-col items-center lg:justify-start justify-center text-center"
                   >
                     <span className="w-6 h-6 font-normal">{item.icon}</span>
                     <span

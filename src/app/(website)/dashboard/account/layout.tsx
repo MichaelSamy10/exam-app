@@ -23,7 +23,7 @@ export default function layout({ children }: { children: ReactNode }) {
 
         <div className="flex gap-6 mt-6">
           <div className="xl:w-[282px] w-1/4 flex-shrink-0">
-            <SidebarInset className="md:p-4 min-h-screen">
+            <SidebarInset className="lg:p-4 min-h-screen">
               <SidebarDetails />
               <SidebarFooter>
                 <Logout className="bg-red-50" width="24px" height="24px" />
