@@ -21,7 +21,7 @@ export default function Results({ result, data }: ResultsProps) {
   return (
     <div className="mt-10">
       <h2 className="text-primary font-semibold text-2xl mb-3">Results:</h2>
-      <div className="flex flex-row gap-9">
+      <div className="flex md:flex-row flex-col gap-9">
         <ResultsChart result={result} />
         <div className="border border-gray-100 flex-1 p-2 h-[514px] overflow-y-auto">
           {result.WrongQuestions.map((question) => {
