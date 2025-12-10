@@ -21,8 +21,10 @@ import { loginSchema } from "@/lib/schemas/auth.schema";
 import FormError from "@/components/shared/form-error";
 
 export default function LoginForm() {
+  // state
   const [show, setShow] = useState(false);
 
+  // Form
   const form = useForm<LoginFields>({
     defaultValues: {
       email: "",
@@ -31,16 +33,19 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  // Funtion
   const handleLogin: SubmitHandler<LoginFields> = async (values) => {
     try {
       const { email, password } = values;
 
+      // Sign in user
       const response = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
 
+      // Handle errors
       if (!response) {
         throw new Error("Unexpected error occurred");
       }
@@ -50,6 +55,7 @@ export default function LoginForm() {
           new URLSearchParams(location.search).get("callbackUrl") ||
           "/dashboard";
 
+        // Redirect user
         return (location.href = callbackUrl);
       }
 
@@ -95,6 +101,7 @@ export default function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
+              {/* Password */}
               <FormLabel htmlFor="password">Password</FormLabel>
               <FormControl>
                 <div className="relative">
@@ -125,11 +132,14 @@ export default function LoginForm() {
           )}
         />
 
+        {/* Navigate to forgot password */}
         <div className="text-end ">
           <Link href={"/forgot-password"} className="text-primary text-sm">
             Forgot your password?
           </Link>
         </div>
+
+        {/* Form Error */}
         {form.formState.errors.root && <FormError form={form} />}
 
         <Button

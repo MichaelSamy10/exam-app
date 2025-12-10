@@ -22,8 +22,10 @@ import FormError from "@/components/shared/form-error";
 import { toast } from "@/hooks/use-toast";
 
 export default function RegisterForm() {
+  // Navigation
   const router = useRouter();
 
+  // Form
   const form = useForm<RegisterFields>({
     defaultValues: {
       firstName: "",
@@ -37,15 +39,20 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
+  // Functions
   const handleRegister: SubmitHandler<RegisterFields> = async (values) => {
+    // Edit phone number format
     const editPhone = form.getValues("phone").replace(/^\+?20/, "") || "";
+
     const payload = {
       ...values,
       phone: editPhone,
     };
 
+    // Register user
     const response = await registerUser(payload);
 
+    // Handle errors
     if (!response.ok) {
       form.setError("root", {
         message: response.error || "Something went wrong",
@@ -57,6 +64,8 @@ export default function RegisterForm() {
     toast({
       title: "Account created successfully",
     });
+
+    // Redirect to dashboard
     router.push("/dashboard");
   };
 
@@ -66,14 +75,16 @@ export default function RegisterForm() {
         onSubmit={form.handleSubmit(handleRegister)}
         className="flex flex-col gap-4"
       >
-        {/* First Name & Last Name */}
         <div className="flex gap-2">
+          {/* First Name */}
           <FormField
             control={form.control}
             name="firstName"
             render={({ field, fieldState }) => (
               <FormItem>
+                {/* Label */}
                 <FormLabel>First Name</FormLabel>
+                {/* Field */}
                 <FormControl>
                   <Input
                     {...field}
@@ -82,16 +93,23 @@ export default function RegisterForm() {
                     autoFocus
                   />
                 </FormControl>
+
+                {/* Feedback */}
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {/* Last Name */}
           <FormField
             control={form.control}
             name="lastName"
             render={({ field, fieldState }) => (
               <FormItem>
+                {/* Label */}
                 <FormLabel>Last Name</FormLabel>
+
+                {/* Field */}
                 <FormControl>
                   <Input
                     {...field}
@@ -99,6 +117,8 @@ export default function RegisterForm() {
                     hasError={Boolean(fieldState.error)}
                   />
                 </FormControl>
+
+                {/* Feedback */}
                 <FormMessage />
               </FormItem>
             )}
@@ -111,7 +131,10 @@ export default function RegisterForm() {
           name="username"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Username</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <Input
                   {...field}
@@ -120,6 +143,8 @@ export default function RegisterForm() {
                   autoComplete="off"
                 />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -131,7 +156,10 @@ export default function RegisterForm() {
           name="email"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Email</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <Input
                   {...field}
@@ -140,6 +168,8 @@ export default function RegisterForm() {
                   hasError={Boolean(fieldState.error)}
                 />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -151,7 +181,10 @@ export default function RegisterForm() {
           name="phone"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Phone</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <PhoneInput
                   {...field}
@@ -161,6 +194,8 @@ export default function RegisterForm() {
                   autoComplete="off"
                 />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -172,10 +207,15 @@ export default function RegisterForm() {
           name="password"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Password</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <PasswordField field={field} fieldState={fieldState} />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -187,14 +227,21 @@ export default function RegisterForm() {
           name="rePassword"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Confirm Password</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <PasswordField field={field} fieldState={fieldState} />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {/* Form Error */}
         {form.formState.errors.root && <FormError form={form} />}
 
         <Button className="w-full mt-4 mb-9" type="submit">

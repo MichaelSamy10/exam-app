@@ -35,12 +35,15 @@ import { getOtpCookie, setOtpCookie } from "../utils/otp-cookies";
 type Step = "forgot" | "otp" | "changePass";
 
 export default function ForgotForm() {
+  // Navigation
   const router = useRouter();
-  const [step, setStep] = useState<Step>("forgot");
 
+  // State
+  const [step, setStep] = useState<Step>("forgot");
   const [timeLeft, setTimeLeft] = useState(60);
   const [receiveCode, setReceiveCode] = useState(true);
 
+  // Forms
   const forgotForm = useForm<{ email: string }>({
     defaultValues: {
       email: "",
@@ -62,10 +65,13 @@ export default function ForgotForm() {
     resolver: zodResolver(resetSchema),
   });
 
+  // Functions
   const handleContinue: SubmitHandler<{ email: string }> = async (values) => {
+    // check if otp was sent in the last 60 seconds
     const storedTime = getOtpCookie(values.email);
     const now = Math.floor(Date.now() / 1000);
 
+    // if stored time exists and is less than 60 seconds ago, skip sending otp
     if (storedTime) {
       const diff = now - Number(storedTime);
       if (diff < 60) {
@@ -80,8 +86,10 @@ export default function ForgotForm() {
       setReceiveCode(true);
     }
 
+    // Send OTP
     const response = await forgotPassword(values);
 
+    // Handle errors
     if (!response.ok) {
       forgotForm.setError("root", { message: response.error });
       return;
@@ -89,18 +97,21 @@ export default function ForgotForm() {
   };
 
   const resendCode = async () => {
+    // Re-assign OTP cookie
     setOtpCookie(forgotForm.getValues("email"));
-
     setReceiveCode(true);
     setTimeLeft(60);
 
     toast({
       title: "A new OTP code has been sent",
     });
+
+    // Resend OTP
     const response = await forgotPassword({
       email: forgotForm.getValues("email"),
     });
 
+    // Handle errors
     if (!response.ok) {
       forgotForm.setError("root", { message: response.error });
       return;
@@ -108,42 +119,53 @@ export default function ForgotForm() {
   };
 
   const handleOTP: SubmitHandler<OtpFields> = async (values) => {
+    // Verify OTP
     const response = await verifyResetCode(values);
+
+    // Handle errors
     if (!response.ok) {
       otpForm.setError("root", { message: response.error });
       return;
     }
 
+    // Proceed to reset password
     resetForm.setValue("email", forgotForm.getValues().email);
 
     setStep("changePass");
   };
 
   const handleReset: SubmitHandler<ResetFields> = async (values) => {
+    // Save new password
     const payload = {
       email: forgotForm.getValues("email"),
       newPassword: values.newPassword,
     };
 
+    // Reset Password
     const response = await resetPassword(payload);
 
+    // Handle errors
     if (!response.ok) {
       resetForm.setError("root", { message: response.error });
       return;
     }
 
+    // Proceed to login
     toast({
       title: "Password Reset Successfully",
     });
     router.push("/login");
   };
 
+  // Effects
   useEffect(() => {
     if (step !== "otp") return;
 
+    // Check if otp was sent in the last 60 seconds
     const storedTime = getOtpCookie(forgotForm.getValues("email"));
     const now = Math.floor(Date.now());
 
+    // Calculate time left
     if (storedTime) {
       const diff = Math.floor((now - Number(storedTime)) / 1000);
       if (diff >= 60) {
@@ -157,6 +179,8 @@ export default function ForgotForm() {
         setReceiveCode(true);
       }
     }
+
+    // Start timer
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -210,6 +234,7 @@ export default function ForgotForm() {
                 )}
               />
 
+              {/* Form Error */}
               {forgotForm.formState.errors.root && (
                 <FormError form={forgotForm} />
               )}
@@ -263,6 +288,7 @@ export default function ForgotForm() {
                 }}
                 render={({ field, fieldState }) => (
                   <FormItem>
+                    {/* OTP */}
                     <div className="flex justify-center mb-5">
                       <InputOTP
                         maxLength={6}
@@ -284,6 +310,7 @@ export default function ForgotForm() {
                       </InputOTP>
                     </div>
 
+                    {/* Form Error */}
                     {fieldState.error && (
                       <FormMessage className="text-center">
                         {fieldState.error.message}
@@ -342,7 +369,7 @@ export default function ForgotForm() {
                 aria-hidden="true"
               />
 
-              {/* Confirm New Password */}
+              {/* New Password */}
               <FormField
                 control={resetForm.control}
                 name="newPassword"
@@ -360,6 +387,8 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
+
+              {/* Confirm New Password */}
               <FormField
                 control={resetForm.control}
                 name="confirmPassword"
@@ -373,6 +402,8 @@ export default function ForgotForm() {
                   </FormItem>
                 )}
               />
+
+              {/* Form Error */}
               {resetForm.formState.errors.root && (
                 <FormError form={resetForm} />
               )}
