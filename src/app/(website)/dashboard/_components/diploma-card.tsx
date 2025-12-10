@@ -27,7 +27,7 @@ export default function DiplomaCard() {
       {isLoading ? (
         <Spinner className="size-24 m-auto text-primary min-h-screen" />
       ) : (
-        <div className="grid xl:grid-cols-3 sm:grid-cols-2 gap-2">
+        <div className="grid xl:grid-cols-3 grid-cols-2 gap-2">
           {payload?.subjects.map((subject) => (
             <Link
               key={subject._id}

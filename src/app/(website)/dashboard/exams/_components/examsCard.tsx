@@ -22,7 +22,7 @@ export default function ExamsCard() {
             <Link
               href={`/dashboard/questions/?examId=${exam._id}&examName=${exam.title}`}
               key={exam._id}
-              className="flex flex-row justify-between items-center bg-blue-50 flex-1 mb-4 p-4"
+              className="flex flex-row justify-between items-center bg-blue-50 flex-1 mb-4 p-4 gap-10"
             >
               <div>
                 <h3 className="text-primary font-semibold text-xl">
