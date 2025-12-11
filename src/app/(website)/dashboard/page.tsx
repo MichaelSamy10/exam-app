@@ -11,9 +11,11 @@ import BreadCrumb from "./_components/breadcrumb";
 export default async function Home() {
   return (
     <>
+      {/* Navigation */}
       <BreadCrumb />
 
       <div className="bg-gray-50 p-6 ">
+        {/* Header */}
         <DashboardHeading
           backButton={false}
           title="Diplomas"

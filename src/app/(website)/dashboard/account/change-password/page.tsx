@@ -1,6 +1,7 @@
 "use client";
 
 import PasswordField from "@/app/(auth)/forgot-password/_components/password-field";
+import FormError from "@/components/shared/form-error";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,15 +18,16 @@ import { changePasswordSchema } from "@/lib/schemas/auth.schema";
 
 import { changePasswordFields } from "@/lib/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleX } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function ChangePassword() {
+  // Hooks
   const { toast } = useToast();
   const { update } = useSession();
 
+  // Form
   const form = useForm<changePasswordFields>({
     defaultValues: {
       currentPassword: "",
@@ -35,6 +37,7 @@ export default function ChangePassword() {
     resolver: zodResolver(changePasswordSchema),
   });
 
+  // Functions
   const handleReset: SubmitHandler<changePasswordFields> = async (values) => {
     const payload = {
       oldPassword: values.currentPassword,
@@ -42,8 +45,10 @@ export default function ChangePassword() {
       rePassword: values.confirmNewPassword,
     };
 
+    // Change password
     const response = await changePassword(payload);
 
+    // Handle errors
     if (!response.ok) {
       form.setError("root", {
         message: response.error || "Something went wrong",
@@ -56,6 +61,7 @@ export default function ChangePassword() {
       title: "Your Password has been updated.",
     });
 
+    // Refresh session and reload after 2 seconds
     setTimeout(async () => {
       await update();
       window.location.reload();
@@ -83,7 +89,10 @@ export default function ChangePassword() {
           name="currentPassword"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Current Password</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <PasswordField
                   field={field}
@@ -91,6 +100,8 @@ export default function ChangePassword() {
                   autoFocus
                 />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -102,10 +113,15 @@ export default function ChangePassword() {
           name="newPassword"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>New Password</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <PasswordField field={field} fieldState={fieldState} />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
@@ -117,31 +133,22 @@ export default function ChangePassword() {
           name="confirmNewPassword"
           render={({ field, fieldState }) => (
             <FormItem>
+              {/* Label */}
               <FormLabel>Confirm New Password</FormLabel>
+
+              {/* Field */}
               <FormControl>
                 <PasswordField field={field} fieldState={fieldState} />
               </FormControl>
+
+              {/* Feedback */}
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {form.formState.errors.root && (
-          <div className="border border-red-600 bg-red-50 p-2">
-            <div className="relative mx-auto">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
-                <CircleX
-                  className="text-red-500 fill-white"
-                  width={18}
-                  height={18}
-                />
-              </div>
-              <p className="text-red-600 text-center text-sm">
-                {form.formState.errors.root.message}
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Form Error */}
+        {form.formState.errors.root && <FormError form={form} />}
 
         <Button className="w-full mt-4 mb-9" type="submit">
           Update Password

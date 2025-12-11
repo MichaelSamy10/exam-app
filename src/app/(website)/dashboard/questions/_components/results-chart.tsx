@@ -14,6 +14,7 @@ type ResultsProps = {
 };
 
 export default function ResultsChart({ result }: ResultsProps) {
+  // Variables
   const chartData = [
     {
       name: "Correct",

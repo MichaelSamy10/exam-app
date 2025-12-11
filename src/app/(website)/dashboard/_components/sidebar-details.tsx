@@ -13,8 +13,10 @@ import { GraduationCap, UserRound } from "lucide-react";
 import Link from "next/link";
 
 export default function SidebarDetails() {
+  // Hooks
   const { activeItem, setActiveItem } = useSidebar();
 
+  // Variables
   const items = [
     { icon: <GraduationCap />, title: "Diplomas", url: "/dashboard" },
     {

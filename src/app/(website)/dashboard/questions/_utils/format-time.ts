@@ -1,7 +1,12 @@
-export const formatTime = (sec: number) => {
-  const m = Math.floor(sec / 60)
+export const formatTime = (seconds: number) => {
+  // Get minutes
+  const min = Math.floor(seconds / 60)
     .toString()
     .padStart(2, "0");
-  const s = (sec % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
+
+  // Get seconds
+  const sec = (seconds % 60).toString().padStart(2, "0");
+
+  // Format time to mm:ss
+  return `${min}:${sec}`;
 };

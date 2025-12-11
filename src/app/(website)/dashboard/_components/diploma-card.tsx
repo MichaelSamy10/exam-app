@@ -8,6 +8,7 @@ import Link from "next/link";
 import React from "react";
 
 export default function DiplomaCard() {
+  // Query
   const {
     isLoading,
     data: payload,
@@ -18,6 +19,7 @@ export default function DiplomaCard() {
     queryFn: getSubjects,
   });
 
+  // Error handling
   if (isError) {
     return <div>{error.message}</div>;
   }
@@ -28,6 +30,7 @@ export default function DiplomaCard() {
         <Spinner className="size-24 m-auto text-primary min-h-screen" />
       ) : (
         <div className="grid xl:grid-cols-3 grid-cols-2 gap-2">
+          {/* Subject Card */}
           {payload?.subjects.map((subject) => (
             <Link
               key={subject._id}

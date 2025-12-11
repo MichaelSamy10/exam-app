@@ -60,14 +60,16 @@ export default function DeleteDialog({ handleDelete }: DeleteDialogProps) {
               Cancel
             </Button>
           </DialogClose>
-          <Button
-            variant="destructive"
-            type="button"
-            className="flex-1"
-            onClick={handleDelete}
-          >
-            Yes, delete
-          </Button>
+          <DialogClose asChild>
+            <Button
+              variant="destructive"
+              type="button"
+              className="flex-1"
+              onClick={handleDelete}
+            >
+              Yes, delete
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

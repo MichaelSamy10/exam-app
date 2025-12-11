@@ -7,9 +7,11 @@ import BreadCrumb from "../_components/breadcrumb";
 export default function Exams() {
   return (
     <div>
+      {/* Breadcrumb */}
       <BreadCrumb items={[{ label: "Exams", href: "/dashboard/exams" }]} />
 
       <div className="bg-gray-50 p-6">
+        {/* Header */}
         <DashboardHeading
           title="Exams"
           icon={<BookOpenCheck width={45} height={45} />}

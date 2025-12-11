@@ -95,6 +95,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+
         {/* Password */}
         <FormField
           control={form.control}

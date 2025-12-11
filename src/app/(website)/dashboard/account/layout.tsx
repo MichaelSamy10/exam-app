@@ -10,10 +10,12 @@ import BreadCrumb from "../_components/breadcrumb";
 export default function layout({ children }: { children: ReactNode }) {
   return (
     <>
+      {/* Navigation */}
       <BreadCrumb
         items={[{ label: "Account", href: "/dashboard/account/profile" }]}
       />
 
+      {/* Heade */}
       <div className="bg-gray-50 p-6">
         <DashboardHeading
           backButton={true}
@@ -21,6 +23,7 @@ export default function layout({ children }: { children: ReactNode }) {
           icon={<UserRound width={45} height={45} />}
         />
 
+        {/* Component Sidebar */}
         <div className="flex gap-6 mt-6">
           <div className="xl:w-[282px] w-1/4 flex-shrink-0">
             <SidebarInset className="lg:p-4 min-h-screen">

@@ -14,10 +14,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function SidebarDetails() {
+  // state
   const [activeItem, setActiveItem] = useState("");
 
+  // hooks
   const pathname = usePathname();
 
+  // Effects
   useEffect(() => {
     if (pathname.includes("profile")) {
       setActiveItem("Profile");
@@ -26,6 +29,7 @@ export default function SidebarDetails() {
     }
   }, [pathname]);
 
+  // Variables
   const items = [
     {
       icon: <CircleUserRound />,
@@ -56,6 +60,7 @@ export default function SidebarDetails() {
                   }`}
                   onClick={() => setActiveItem(item.title)}
                 >
+                  {/* Sidebar item */}
                   <Link
                     href={item.url}
                     className="flex lg:flex-row flex-col items-center lg:justify-start justify-center text-center"

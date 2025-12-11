@@ -16,25 +16,28 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/hooks/use-toast";
 
 export default function QuestionCard() {
-  const searchParams = useSearchParams();
-  const examId = searchParams.get("examId");
-
+  // State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerCheckBody>([]);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [result, setResult] = useState<CheckQuestionResponse | null>(null);
+  const [result, setResult] =
+    useState<SuccessResponse<CheckQuestionResponse>>();
 
+  // Hooks
+  const searchParams = useSearchParams();
+  const examId = searchParams.get("examId");
+
+  // Query
   const { data, isLoading } = useQuery({
     queryKey: ["Questions", examId],
     queryFn: () => getQuestions(examId || ""),
   });
 
+  // Variables
   const durationMinutes = data?.questions?.[0]?.exam?.duration || 0;
   const durationSeconds = durationMinutes * 60;
-
   const currentQuestion = data?.questions?.[currentIndex] || null;
   const numOfQuestions = data?.questions.length || 0;
-
   const questionsProgress =
     timeLeft === 0
       ? 100
@@ -47,12 +50,16 @@ export default function QuestionCard() {
       ? Math.round((timeLeft / durationSeconds) * 100)
       : 0;
 
+  // Functions
   const handleSelect = (answerKey: string) => {
+    // Update answers when user selects an option
     setAnswers((prev) => {
+      // Check if answer for current question already exists
       const existsIndex = prev.findIndex(
         (a) => a.questionId === currentQuestion?._id
       );
 
+      // If exists, update it
       if (existsIndex !== -1) {
         const updated = [...prev];
         updated[existsIndex] = {
@@ -61,6 +68,7 @@ export default function QuestionCard() {
         };
         return updated;
       } else {
+        // If not, add new answer
         return [
           ...prev,
           { questionId: currentQuestion?._id, correct: answerKey },
@@ -70,10 +78,12 @@ export default function QuestionCard() {
   };
 
   const handleNext = () => {
+    // Check if user has answered the question
     const currentAnswer = answers.find(
       (a) => a.questionId === currentQuestion?._id
     )?.correct;
 
+    // If not answered, show toast and prevent navigation
     if (!currentAnswer) {
       toast({
         title: "Please answer the question.",
@@ -82,20 +92,24 @@ export default function QuestionCard() {
       return;
     }
 
+    // If answered, go to next question
     if (currentIndex < numOfQuestions - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
+    // Go to previous question
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
   const handleSubmit = useCallback(async () => {
+    // Check if user has answered the last question
     const currentAnswer = answers.find(
       (a) => a.questionId === currentQuestion?._id
     )?.correct;
 
+    // If not answered, show toast and prevent submission
     if (!currentAnswer) {
       toast({
         title: "Please answer the question.",
@@ -103,26 +117,35 @@ export default function QuestionCard() {
       });
       return;
     }
-    try {
-      const payload = answers && answers.length ? answers : [];
 
-      const result = await submitAnswers(payload);
+    // Submit answers
+    const result = await submitAnswers(answers);
 
-      setResult(result);
-    } catch (error) {
-      console.error("Failed to submit answers:", error);
+    // Handle errors
+    if (!result.ok) {
+      toast({
+        title: result.error || "Failed to submit answers.",
+        variant: "destructive",
+      });
+      return;
     }
+
+    setResult(result.data);
   }, [answers, currentQuestion]);
 
+  // Effects
   useEffect(() => {
+    // Initialize timer
     if (durationSeconds > 0 && timeLeft === null) {
       setTimeLeft(durationSeconds);
     }
   }, [durationSeconds, timeLeft]);
 
   useEffect(() => {
+    // Timer countdown
     if (timeLeft === null || timeLeft <= 0) return;
 
+    //  Start timer
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (!prev || prev <= 1) {
@@ -134,6 +157,7 @@ export default function QuestionCard() {
       });
     }, 1000);
 
+    // Cleanup
     return () => clearInterval(interval);
   }, [timeLeft, handleSubmit]);
 
@@ -226,7 +250,7 @@ export default function QuestionCard() {
               </div>
             </div>
           ) : (
-            <Results result={result} data={data} />
+            <Results result={result} questionData={data} />
           )}
         </div>
       )}

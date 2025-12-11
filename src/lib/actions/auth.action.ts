@@ -50,10 +50,17 @@ export async function submitAnswers(answers: AnswerCheckBody) {
       body: JSON.stringify({ answers }),
     });
 
-    const data: CheckQuestionResponse = await response.json();
-    return data;
+    const payload: ApiResponse<CheckQuestionResponse> = await response.json();
+
+    if ("code" in payload) {
+      return { ok: false, error: payload.message };
+    }
+
+    return { ok: true, data: payload };
   } catch (error) {
-    console.error(error);
-    throw error;
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Something went wrong",
+    };
   }
 }

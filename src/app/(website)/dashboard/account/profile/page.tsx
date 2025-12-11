@@ -28,6 +28,21 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function Profile() {
+  // Navigation
+  const router = useRouter();
+
+  // Query
+  const { data, isLoading } = useQuery({
+    queryKey: ["UserInfo"],
+    queryFn: () => getUserInfo(),
+    refetchOnWindowFocus: false,
+  });
+
+  // Hooks
+  const { toast } = useToast();
+  const { update } = useSession();
+
+  // Form
   const form = useForm<ProfileFields>({
     defaultValues: {
       firstName: "",
@@ -39,27 +54,19 @@ export default function Profile() {
     resolver: zodResolver(profileSchema),
   });
 
-  const router = useRouter();
-  const { toast } = useToast();
-  const { update } = useSession();
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["UserInfo"],
-    queryFn: () => getUserInfo(),
-    refetchOnWindowFocus: false,
-  });
-
+  // Functions
   const handleEdit: SubmitHandler<ProfileFields> = async (values) => {
+    // Change phone format
     const phone = values?.phone.startsWith("+20")
       ? values?.phone.slice(3)
       : values?.phone;
 
     const payload = { ...values, phone };
+
+    // Edit user info
     const response = await editUserInfo(payload);
 
-    await update();
-    router.refresh();
-
+    // Handle errors
     if (!response.ok) {
       form.setError("root", {
         message: response.error || "Something went wrong",
@@ -67,26 +74,37 @@ export default function Profile() {
 
       return;
     }
+
     toast({
       title: "Your changes have been saved.",
     });
+
+    // Refresh session and reload
+    await update();
+    router.refresh();
   };
 
   const handleDelete = async () => {
+    // Delete user account
     const response = await deleteUser();
+
+    // Handle errors
     if (!response.ok) {
       form.setError("root", { message: response.error });
       return;
     }
 
-    // toast({
-    //   title: "Your account has been deleted successfully",
-    // });
+    toast({ title: "Your account has been deleted." });
 
-    await signOut({ callbackUrl: "/login" });
+    setTimeout(async () => {
+      // Sign out user
+      await signOut({ callbackUrl: "/login" });
+    }, 2000);
   };
 
+  // Effects
   useEffect(() => {
+    // Fill form with user data
     if (data?.user) {
       form.reset({
         firstName: data?.user.firstName,
@@ -107,30 +125,42 @@ export default function Profile() {
           onSubmit={form.handleSubmit(handleEdit)}
           className="flex flex-col gap-4 bg-background p-6 min-h-screen"
         >
-          {/* First Name & Last Name */}
           <div className="lg:grid grid-cols-2 gap-2">
+            {/* First Name */}
             <FormField
               control={form.control}
               name="firstName"
               render={({ field, fieldState }) => (
                 <FormItem>
+                  {/* Label */}
                   <FormLabel>First Name</FormLabel>
+
+                  {/* Field */}
                   <FormControl>
                     <Input {...field} hasError={Boolean(fieldState.error)} />
                   </FormControl>
+
+                  {/* Feedback */}
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Last Name */}
             <FormField
               control={form.control}
               name="lastName"
               render={({ field, fieldState }) => (
                 <FormItem>
+                  {/* Label */}
                   <FormLabel className="lg:m-0 mt-3">Last Name</FormLabel>
+
+                  {/* Field */}
                   <FormControl>
                     <Input {...field} hasError={Boolean(fieldState.error)} />
                   </FormControl>
+
+                  {/* Feedback */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -143,7 +173,10 @@ export default function Profile() {
             name="username"
             render={({ field, fieldState }) => (
               <FormItem>
+                {/* Label */}
                 <FormLabel>Username</FormLabel>
+
+                {/* Field */}
                 <FormControl>
                   <Input
                     {...field}
@@ -151,6 +184,8 @@ export default function Profile() {
                     autoComplete="off"
                   />
                 </FormControl>
+
+                {/* Feedback */}
                 <FormMessage />
               </FormItem>
             )}
@@ -162,7 +197,10 @@ export default function Profile() {
             name="email"
             render={({ field, fieldState }) => (
               <FormItem>
+                {/* Label */}
                 <FormLabel>Email</FormLabel>
+
+                {/* Field */}
                 <FormControl>
                   <Input
                     {...field}
@@ -170,6 +208,8 @@ export default function Profile() {
                     hasError={Boolean(fieldState.error)}
                   />
                 </FormControl>
+
+                {/* Feedback */}
                 <FormMessage />
               </FormItem>
             )}
@@ -181,7 +221,10 @@ export default function Profile() {
             name="phone"
             render={({ field, fieldState }) => (
               <FormItem>
+                {/* Label */}
                 <FormLabel>Phone</FormLabel>
+
+                {/* Field */}
                 <FormControl>
                   <PhoneInput
                     maxLength={11}
@@ -190,13 +233,18 @@ export default function Profile() {
                     autoComplete="off"
                   />
                 </FormControl>
+
+                {/* Feedback */}
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {/* Form Error */}
           {form.formState.errors.root && <FormError form={form} />}
 
           <div className="mt-4 mb-9 grid lg:grid-cols-2 grid-row-2 gap-2">
+            {/* Show Delete Dialog */}
             <DeleteDialog handleDelete={handleDelete} />
 
             <Button type="submit">Save changes</Button>

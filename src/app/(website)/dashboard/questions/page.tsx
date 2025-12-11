@@ -13,6 +13,7 @@ export default function Questions() {
 
   return (
     <div>
+      {/* Navigation */}
       <BreadCrumb
         items={[
           { label: "Exams", href: "/dashboard/exams" },
@@ -21,6 +22,7 @@ export default function Questions() {
       />
 
       <div className="bg-gray-50 p-6 min-h-screen">
+        {/* Header */}
         <DashboardHeading
           title={`[${examName}] Questions`}
           icon={<CircleQuestionMark width={45} height={45} />}

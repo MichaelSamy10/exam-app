@@ -13,11 +13,11 @@ import { getAnswerByKey } from "../_utils/get-answer-key";
 import ResultsButtons from "./results-buttons";
 
 type ResultsProps = {
-  result: CheckQuestionResponse;
-  data: SuccessResponse<QuestionsResponse>;
+  result: SuccessResponse<CheckQuestionResponse>;
+  questionData: SuccessResponse<QuestionsResponse>;
 };
 
-export default function Results({ result, data }: ResultsProps) {
+export default function Results({ result, questionData }: ResultsProps) {
   return (
     <div className="mt-10">
       <h2 className="text-primary font-semibold text-2xl mb-3">Results:</h2>
@@ -25,10 +25,10 @@ export default function Results({ result, data }: ResultsProps) {
         <ResultsChart result={result} />
         <div className="border border-gray-100 flex-1 p-2 h-[514px] overflow-y-auto">
           {result.WrongQuestions.map((question) => {
-            const questionData = data.questions.find(
+            const data = questionData.questions.find(
               (ques: Question) => ques._id === question.QID
             );
-            if (!questionData) return null;
+            if (!data) return null;
 
             return (
               <div key={question.QID} className="p-2">
@@ -44,7 +44,7 @@ export default function Results({ result, data }: ResultsProps) {
                       className="border-red-500 text-red-500"
                     />
                     <Label className="m-0">
-                      {getAnswerByKey(questionData, question.inCorrectAnswer)}
+                      {getAnswerByKey(data, question.inCorrectAnswer)}
                     </Label>
                   </div>
 
@@ -56,7 +56,7 @@ export default function Results({ result, data }: ResultsProps) {
                       className="border-green-600 text-emerald-600"
                     />
                     <Label className="m-0">
-                      {getAnswerByKey(questionData, question.correctAnswer)}
+                      {getAnswerByKey(data, question.correctAnswer)}
                     </Label>
                   </div>
                 </RadioGroup>
@@ -64,10 +64,10 @@ export default function Results({ result, data }: ResultsProps) {
             );
           })}
           {result.correctQuestions.map((question) => {
-            const questionData = data.questions.find(
+            const data = questionData.questions.find(
               (ques: Question) => ques._id === question.QID
             );
-            if (!questionData) return null;
+            if (!data) return null;
 
             return (
               <div key={question.QID} className="p-2">
@@ -83,7 +83,7 @@ export default function Results({ result, data }: ResultsProps) {
                       className="border-green-600 text-emerald-600"
                     />
                     <Label className="m-0">
-                      {getAnswerByKey(questionData, question.correctAnswer)}
+                      {getAnswerByKey(data, question.correctAnswer)}
                     </Label>
                   </div>
                 </RadioGroup>

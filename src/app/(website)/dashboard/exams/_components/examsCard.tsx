@@ -7,6 +7,7 @@ import { Timer } from "lucide-react";
 import Link from "next/link";
 
 export default function ExamsCard() {
+  // Query
   const { data, isLoading } = useQuery({
     queryKey: ["Exam"],
     queryFn: () => getExams(),
@@ -18,6 +19,7 @@ export default function ExamsCard() {
         <Spinner className="size-24 m-auto text-primary min-h-screen" />
       ) : (
         <div>
+          {/* Exam card */}
           {data?.exams.map((exam) => (
             <Link
               href={`/dashboard/questions/?examId=${exam._id}&examName=${exam.title}`}
@@ -25,13 +27,18 @@ export default function ExamsCard() {
               className="flex flex-row justify-between items-center bg-blue-50 flex-1 mb-4 p-4 gap-10"
             >
               <div>
+                {/* Exam Title */}
                 <h3 className="text-primary font-semibold text-xl">
                   {exam.title}
                 </h3>
+
+                {/* Number of Questions */}
                 <p className="text-gray-500">
                   {exam.numberOfQuestions} Questions
                 </p>
               </div>
+
+              {/* Exam Duration */}
               <div className="flex flex-row gap-2">
                 <span>
                   <Timer width={24} height={24} className="text-gray-400" />
