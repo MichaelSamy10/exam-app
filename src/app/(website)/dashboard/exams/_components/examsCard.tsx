@@ -48,6 +48,7 @@ export default function ExamsCard() {
               </div>
             </Link>
           ))}
+          <p className="text-center text-secondary my-6">End of List</p>
         </div>
       )}
     </div>

@@ -19,8 +19,12 @@ export const getUserInfo = async () => {
   return payload;
 };
 
-export const getSubjects = async () => {
-  const response = await fetch("/api/subjects");
+export const getSubjects = async ({
+  pageParam = 1,
+}: {
+  pageParam?: number;
+}) => {
+  const response = await fetch(`/api/subjects?page=${pageParam}&limit=4`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch subjects");

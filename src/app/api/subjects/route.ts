@@ -1,42 +1,51 @@
-import { SubjectResponse } from "@/lib/types/subjects";
-import { createAuthenticatedHandler } from "@/lib/utils/api-handler";
+import { ExamResponse } from "@/lib/types/exams";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-// export async function GET(req: NextRequest) {
-//   try {
-//     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+export async function GET(req: NextRequest) {
+  try {
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
 
-//     if (!token?.accessToken) {
-//       return NextResponse.json(
-//         { message: "token not provided", code: 401 },
-//         { status: 401 }
-//       );
-//     }
+    if (!token?.accessToken) {
+      return NextResponse.json(
+        { message: "token not provided" },
+        { status: 401 }
+      );
+    }
 
-//     const response = await fetch(
-//       `${process.env.NEXT_PUBLIC_API_URL}/subjects`,
-//       {
-//         headers: {
-//           token: token?.accessToken,
-//         },
-//       }
-//     );
+    const { searchParams } = new URL(req.url);
 
-//     // Always parse the JSON response from your backend
-//     const data: ApiResponse<SubjectResponse> = await response.json();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/subjects?${searchParams.toString()}`,
+      {
+        headers: {
+          token: token.accessToken,
+        },
+      }
+    );
 
-//     // Check if backend returned an error (has 'code' property)
-//     if ("code" in data) {
-//       return NextResponse.json({ message: data.message, code: data.code });
-//     }
+    const data: ApiResponse<ExamResponse> = await response.json();
 
-//     // Success response (has 'data' property)
-//     return NextResponse.json(data);
-//   } catch (error) {
-//     return NextResponse.json({
-//       message: error instanceof Error ? error.message : "An unexpected error occurred",
-//       code: 500,
-//     });
-//   }
-// }
+    if ("code" in data) {
+      return NextResponse.json(
+        { message: data.message },
+        { status: data.code }
+      );
+    }
 
-export const GET = createAuthenticatedHandler<SubjectResponse>("/subjects");
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
+  }
+}
