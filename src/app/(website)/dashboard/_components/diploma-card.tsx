@@ -63,7 +63,7 @@ export default function DiplomaCard() {
               <Link
                 key={subject._id}
                 href={`/dashboard/exams`}
-                className="relative xl:w-[336px] h-[448px]"
+                className="relative xl:w-[336px] xl:h-[448px] h-64"
               >
                 <Image
                   src={subject.icon}
@@ -73,7 +73,7 @@ export default function DiplomaCard() {
                   priority
                   className="object-cover"
                 />
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-11/12 h-16 flex items-center justify-center text-white bg-[#155DFC]/50">
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-11/12 h-16 flex items-center justify-center text-white bg-[#155DFC]/50 text-center">
                   {subject.name}
                 </div>
               </Link>
