@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCallback, useEffect, useState } from "react";
 import { AnswerCheckBody, CheckQuestionResponse } from "@/lib/types/questions";
-import { submitAnswers } from "@/lib/actions/auth.action";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import Results from "./results";
@@ -14,6 +13,7 @@ import { CircularProgress } from "@/components/ui/circular-progress";
 import { formatTime } from "../_utils/format-time";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/hooks/use-toast";
+import { submitAnswers } from "@/lib/actions/submit-answers.action";
 
 export default function QuestionCard() {
   // State
