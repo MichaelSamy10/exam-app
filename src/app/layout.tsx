@@ -28,7 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistMono.variable} ${inter.variable} font-primary antialiased`}
+        // className={`${geistMono.variable} ${inter.variable} font-primary antialiased`}
+        className={`${geistMono.className} ${geistMono.variable} ${inter.variable} font-primary antialiased`}
       >
         <Providers>{children}</Providers>
         <Toaster />
