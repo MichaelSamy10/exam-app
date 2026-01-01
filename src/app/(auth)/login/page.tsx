@@ -4,8 +4,8 @@ import { Suspense } from "react";
 
 export default function LoginPage() {
   return (
-    <div className="md:w-[452px] w-4/5 m-auto">
-      <h2 className="font-secondary font-bold text-3xl mb-10">Login</h2>
+    <div className="max-w-104 w-4/5 m-auto">
+      <h1 className="font-secondary font-bold text-3xl mb-10">Login</h1>
       <Suspense fallback={<div>Loading...</div>}>
         <LoginForm />
       </Suspense>
