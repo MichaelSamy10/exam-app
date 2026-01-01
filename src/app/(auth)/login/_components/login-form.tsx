@@ -69,7 +69,10 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-7">
+      <form
+        onSubmit={form.handleSubmit(handleLogin)}
+        className="flex flex-col gap-4 w-full"
+      >
         {/* Email */}
         <FormField
           control={form.control}
@@ -112,7 +115,7 @@ export default function LoginForm() {
                     id="password"
                     type={show ? "text" : "password"}
                     hasError={!!form.formState.errors.password}
-                    autoComplete="off"
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -134,17 +137,18 @@ export default function LoginForm() {
         />
 
         {/* Navigate to forgot password */}
-        <div className="text-end ">
-          <Link href={"/forgot-password"} className="text-primary text-sm">
-            Forgot your password?
-          </Link>
-        </div>
+        <Link
+          href={"/forgot-password"}
+          className="text-primary text-sm self-end -mt-1.5"
+        >
+          Forgot your password?
+        </Link>
 
         {/* Form Error */}
         {form.formState.errors.root && <FormError form={form} />}
 
         <Button
-          className="w-full"
+          className="w-full mt-6"
           type="submit"
           disabled={!form.formState.isValid && form.formState.isSubmitted}
         >
