@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         // className={`${geistMono.variable} ${inter.variable} font-primary antialiased`}
-        className={`${geistMono.className} ${geistMono.variable} ${inter.variable} font-primary antialiased`}
+        className={`${geistMono.className} ${geistMono.variable} ${inter.variable} antialiased`}
       >
         <Providers>{children}</Providers>
         <Toaster />
