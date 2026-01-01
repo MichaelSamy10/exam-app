@@ -25,9 +25,8 @@ declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
-  interface Session {
-    user: User["user"];
-  }
+  type Session = User["user"];
+
   /** The OAuth profile returned from your provider */
   interface Profile {
     iss: string;
