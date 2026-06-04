@@ -1,0 +1,134 @@
+{
+  "metadata": {
+    "title": "Exam App"
+  },
+  "auth-pages": {
+    "auth-layout": {
+      "title-1": "الدبلومات المخصصة",
+      "description-1": "اختر من بين المسارات المتخصصة مثل Frontend وBackend وMobile Development.",
+      "title-2": "الامتحانات المركزة",
+      "description-2": "قم بالوصول إلى الاختبارات الخاصة بالموضوع بما في ذلك HTML وCSS وJavaScript والمزيد.",
+      "title-3": "نماذج ذكية متعددة الخطوات",
+      "header": "تطبيق الامتحان",
+      "subtitle": "قم بتمكين رحلتك التعليمية من خلال منصة الامتحانات الذكية الخاصة بنا."
+    },
+    "login-page": {
+      "header": "تسجيل الدخول",
+      "no-account-text": "ليس لديك حساب؟",
+      "register-link": "إنشاء حساب",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "forgot-password": "نسيت كلمة السر؟",
+      "login-button": "تسجيل الدخول"
+    },
+    "register-page": {
+      "header": "إنشاء حساب",
+      "sub-text": " لديك حساب؟ \n<a>تسجيل الدخول</a>",
+      "firstname-placeholder": "احمد",
+      "firstname-label": "الاسم الاول",
+      "lastname-label": "الاسم الاخير",
+      "lastname-placeholder": "عبدالله",
+      "username-label": "اسم المستخدم",
+      "email-label": "البريد إلكتروني",
+      "phone-label": "رقم الموبايل",
+      "password-label": "كلمة المرور",
+      "confirm-pass-label": "تأكيد كلمة المرور",
+      "button": "إنشاء حساب",
+      "firstname-required": "الاسم الأول مطلوب",
+      "lastname-required": "الاسم الأخير مطلوب",
+      "username-required": "اسم المستخدم مطلوب",
+      "firstname-min": "يجب أن يتكون الاسم الأول من 3 أحرف على الأقل",
+      "lastname-min": "يجب أن يتكون الاسم الأخير من 3 أحرف على الأقل",
+      "username-min": "يجب أن يكون اسم المستخدم 3 أحرف على الأقل",
+      "email-invalid": "البريد الإلكتروني غير صالح",
+      "email-required": "البريد الإلكتروني مطلوب",
+      "password-min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+      "password-lowercase": "يجب أن تتضمن كلمة المرور حرفًا صغيرًا واحدًا على الأقل",
+      "password-uppercase": "يجب أن تتضمن كلمة المرور حرفًا كبيرًا واحدًا على الأقل",
+      "password-number": "يجب أن تتضمن كلمة المرور رقمًا واحدًا على الأقل",
+      "password-special": "يجب أن تتضمن كلمة المرور حرفًا خاصًا واحدًا على الأقل",
+      "password-required": "كلمة المرور مطلوبة",
+      "phone-required": "رقم الموبايل مطلوب",
+      "register-successful": "تم إنشاء الحساب بنجاح"
+    }
+  },
+  "dashboard": {
+    "diplomas": "الدبلومات",
+    "account-settings": "إعدادات الحساب",
+    "breadcrumb": {
+      "home": "الرئيسية",
+      "account": "الحساب",
+      "profile": "الملف الشخصي"
+    },
+    "diplomas-page": {
+      "scroll-btn": "اسحب لعرض المزيد",
+      "end": "نهاية القائمة"
+    },
+    "dropdown": {
+      "account": "الحساب",
+      "logout": "تسجيل الخروج"
+    },
+    "account-sidebar": {
+      "profile": "الملف الشخصي",
+      "change-password": "تغيير كلمة المرور"
+    },
+    "profile-page": {
+      "firstname": "الاسم الاول",
+      "lastname": "الاسم الاخير",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الموبايل",
+      "save-changes": "حفظ التغييرات",
+      "delete-account": "حذف حسابي",
+      "save-success": "تم حفظ التغييرات بنجاح",
+      "delete-success": "تم حذف حسابك بنجاح",
+      "delete-dialog": {
+        "title": "هل انت متاكد من حذف حسابك؟",
+        "description": "هذا الإجراء دائم ولا يمكن التراجع عنه.",
+        "cancel": "الغاء",
+        "delete": "نعم، حذف"
+      },
+      "validation": {
+        "firstname-required": "الاسم الاول مطلوب",
+        "firstname-min": "الاسم الاول يجب أن يتكون من 3 أحرف على الأقل",
+        "lastname-required": "الاسم الاخير مطلوب",
+        "lastname-min": "الاسم الاخير يجب أن يتكون من 3 أحرف على الأقل",
+        "username-required": "اسم المستخدم مطلوب",
+        "username-min": "اسم المستخدم يجب أن يتكون من 3 أحرف على الأقل",
+        "email-required": "البريد الإلكتروني مطلوب",
+        "email-invalid": "البريد الإلكتروني غير صالح",
+        "phone-required": "رقم الموبايل مطلوب",
+        "invalid-phone": "رقم الموبايل غير صالح"
+      }
+    },
+    "change-password": {
+      "current-password": "كلمة المرور الحالية",
+      "new-password": "كلمة المرور الجديدة",
+      "confirm-password": "تأكيد كلمة المرور الجديدة",
+      "update-password-btn": "تحديث كلمة المرور",
+      "validation": {
+        "current-pass-required": "كلمة المرور الحالية مطلوبة",
+        "new-pass-required": "كلمة المرور الجديدة مطلوبة",
+        "new-pass-min": "كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل",
+        "new-pass-lowercase": "كلمة المرور الجديدة يجب أن تتضمن حرفًا صغيرًا واحدًا على الأقل",
+        "new-pass-uppercase": "كلمة المرور الجديدة يجب أن تتضمن حرفًا كبيرًا واحدًا على الأقل",
+        "new-pass-number": "كلمة المرور الجديدة يجب أن تتضمن رقمًا واحدًا على الأقل",
+        "new-pass-special": "كلمة المرور الجديدة يجب أن تتضمن حرفًا خاصًا واحدًا على الأقل",
+        "confirm-pass-required": "تأكيد كلمة المرور مطلوبة",
+        "confirm-pass-min": "تأكيد كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+        "confirm-pass-lowercase": "تأكيد كلمة المرور يجب أن تتضمن حرفًا صغيرًا واحدًا على الأقل",
+        "confirm-pass-uppercase": "تأكيد كلمة المرور يجب أن تتضمن حرفًا كبيرًا واحدًا على الأقل",
+        "confirm-pass-number": "تأكيد كلمة المرور يجب أن تتضمن رقمًا واحدًا على الأقل",
+        "confirm-pass-special": "تأكيد كلمة المرور يجب أن تتضمن حرفًا خاصًا واحدًا على الأقل",
+        "passwords-not-match": "كلمات المرور غير متطابقة",
+        "update-success": "تم تحديث كلمة المرور بنجاح"
+      }
+    },
+    "exams": {
+      "questions": "أسئلة",
+      "duration": "المدة",
+      "minutes": "دقيقة",
+      "end-of-list": "نهاية القائمة"
+    }
+  }
+}

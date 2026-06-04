@@ -11,7 +11,7 @@ export function forgotPassword(data: { email: string }) {
   return apiRequest<{ email: string }, ForgotResponse>(
     "/auth/forgotPassword",
     data,
-    "POST"
+    "POST",
   );
 }
 
@@ -19,7 +19,7 @@ export function verifyResetCode(data: { resetCode: string }) {
   return apiRequest<{ resetCode: string }, { status: string }>(
     "/auth/verifyResetCode",
     data,
-    "POST"
+    "POST",
   );
 }
 
@@ -27,14 +27,14 @@ export function resetPassword(data: ResetFields) {
   return apiRequest<ResetFields, ResetResponse>(
     "/auth/resetPassword",
     data,
-    "PUT"
+    "PUT",
   );
 }
 
-export function registerUser(data: RegisterFields) {
+export async function registerUser(data: RegisterFields) {
   return apiRequest<RegisterFields, LoginResponse>(
     "/auth/signup",
     data,
-    "POST"
+    "POST",
   );
 }

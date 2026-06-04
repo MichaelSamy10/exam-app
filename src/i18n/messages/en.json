@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "title": "Exam App"
+  },
+  "auth-pages": {
+    "auth-layout": {
+      "title-1": "Tailored Diplomas",
+      "description-1": "Choose from specialized tracks like Frontend, Backend, and Mobile Development.",
+      "title-2": "Focused Exams",
+      "description-2": "Access topic-specific tests including HTML, CSS, JavaScript, and more.",
+      "title-3": "Smart Multi-Step Forms",
+      "header": "Exam App",
+      "subtitle": "Empower your learning journey with our smart exam platform."
+    },
+    "login-page": {
+      "header": "Login",
+      "no-account-text": "Don't have an account?",
+      "register-link": "Create yours",
+      "email": "Email",
+      "password": "Password",
+      "forgot-password": "Forgot your password?",
+      "login-button": "Login"
+    },
+    "register-page": {
+      "header": "Create Account",
+      "sub-text": "Already have an account? <a>Login</a>",
+      "firstname-placeholder": "Ahmed",
+      "firstname-label": "First Name",
+      "lastname-label": "Last Name",
+      "lastname-placeholder": "Abdullah",
+      "username-label": "Username",
+      "email-label": "Email",
+      "phone-label": "Phone",
+      "password-label": "Password",
+      "confirm-pass-label": "Confirm Password",
+      "button": "Create Account",
+      "firstname-required": "First name is required",
+      "lastname-required": "Last name is required",
+      "username-required": "Username is required",
+      "firstname-min": "First name must be at least 3 characters",
+      "lastname-min": "Last name must be at least 3 characters",
+      "username-min": "Username must be at least 3 characters",
+      "email-invalid": "Invalid email",
+      "email-required": "Email is required",
+      "password-min": "Password must be at least 8 characters",
+      "password-lowercase": "Password must include at least one lowercase letter",
+      "password-uppercase": "Password must include at least one uppercase letter",
+      "password-number": "Password must include at least one number",
+      "password-special": "Password must include at least one special character",
+      "password-required": "Password is required",
+      "phone-required": "Phone number is required",
+      "passwords-not-match": "Passwords do not match",
+      "register-successful": "Account created successfully"
+    }
+  },
+  "dashboard": {
+    "diplomas": "Diplomas",
+    "account-settings": "Account Settings",
+    "breadcrumb": {
+      "home": "Home",
+      "account": "Account",
+      "profile": "Profile"
+    },
+    "diplomas-page": {
+      "scroll-btn": "Scroll to view more",
+      "end": "End of List"
+    },
+    "dropdown": {
+      "account": "Account",
+      "logout": "Logout"
+    },
+    "account-sidebar": {
+      "profile": "Profile",
+      "change-password": "Change Password"
+    },
+    "profile-page": {
+      "firstname": "First Name",
+      "lastname": "Last Name",
+      "username": "Username",
+      "email": "Email",
+      "phone": "Phone",
+      "save-changes": "Save Changes",
+      "delete-account": "Delete My Account",
+      "save-success": "Your changes have been saved.",
+      "delete-success": "Your account has been deleted.",
+      "delete-dialog": {
+        "title": "Are you sure you want to delete your account?",
+        "description": "This action is permanent and cannot be undone.",
+        "cancel": "Cancel",
+        "delete": "Yes, Delete"
+      },
+      "validation": {
+        "firstname-required": "First name is required",
+        "firstname-min": "First name must be at least 3 characters",
+        "lastname-required": "Last name is required",
+        "lastname-min": "Last name must be at least 3 characters",
+        "username-required": "Username is required",
+        "username-min": "Username must be at least 3 characters",
+        "email-required": "Email is required",
+        "email-invalid": "Invalid email",
+        "phone-required": "Phone number is required",
+        "invalid-phone": "Invalid phone number"
+      }
+    },
+    "change-password": {
+      "current-password": "Current Password",
+      "new-password": "New Password",
+      "confirm-password": "Confirm New Password",
+      "update-password-btn": "Update Password",
+      "validation": {
+        "current-pass-required": "Current Password is required",
+        "new-pass-required": "New Password is required",
+        "new-pass-min": "New Password must be at least 8 characters",
+        "new-pass-lowercase": "New Password must include at least one lowercase letter",
+        "new-pass-uppercase": "New Password must include at least one uppercase letter",
+        "new-pass-number": "New Password must include at least one number",
+        "new-pass-special": "New Password must include at least one special character",
+        "confirm-pass-required": "Confirm Password is required",
+        "confirm-pass-min": "Confirm Password must be at least 8 characters",
+        "confirm-pass-lowercase": "Confirm Password must include at least one lowercase letter",
+        "confirm-pass-uppercase": "Confirm Password must include at least one uppercase letter",
+        "confirm-pass-number": "Confirm Password must include at least one number",
+        "confirm-pass-special": "Confirm Password must include at least one special character",
+        "passwords-not-match": "Passwords do not match",
+        "update-success": "Password updated successfully"
+      }
+    },
+    "exams": {
+      "questions": "Questions",
+      "duration": "Duration",
+      "minutes": "minutes",
+      "end-of-list": "End of List"
+    }
+  }
+}

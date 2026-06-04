@@ -23,7 +23,7 @@ export type ResetResponse = {
 
 export type LoginFields = z.infer<typeof loginSchema>;
 
-export type RegisterFields = z.infer<typeof registerSchema>;
+export type RegisterFields = z.infer<ReturnType<typeof registerSchema>>;
 
 export type OtpFields = {
   resetCode: string;

@@ -1,4 +1,50 @@
-import { ExamResponse } from "@/lib/types/exams";
-import { createAuthenticatedHandler } from "@/lib/utils/api-handler";
+import { QuestionsResponse } from '@/lib/types/questions';
+import { getToken } from 'next-auth/jwt';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const GET = createAuthenticatedHandler<ExamResponse>("/exams");
+export async function GET(req: NextRequest) {
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  try {
+    if (!token?.accessToken) {
+      return NextResponse.json(
+        { message: 'token not provided' },
+        { status: 401 },
+      );
+    }
+
+    const examId = req.nextUrl.searchParams.get('subject');
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/exams?subject=${examId}`,
+      {
+        headers: {
+          token: token?.accessToken,
+        },
+      },
+    );
+
+    const data: ApiResponse<QuestionsResponse> =
+      await response.json();
+
+    if ('code' in data) {
+      return NextResponse.json({
+        message: data.message,
+        code: data.code,
+      });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({
+      message:
+        error instanceof Error
+          ? error.message
+          : 'An unexpected error occurred',
+      code: 500,
+    });
+  }
+}

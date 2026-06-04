@@ -13,6 +13,7 @@ const config: Config = {
       fontFamily: {
         primary: ["var(--font-geist-mono)", "monospace"],
         secondary: ["var(--font-inter)", "sans-serif"],
+        tajawal: ["var(--font-tajawal)", "sans-serif"],
       },
       colors: {
         background: "hsl(var(--background))",

@@ -1,18 +1,19 @@
-import { ExamResponse } from "../types/exams";
-import { QuestionsResponse } from "../types/questions";
-import { SubjectResponse } from "../types/subjects";
-import { UserInfoResponse } from "../types/user-info";
+import { ExamResponse } from '../types/exams';
+import { QuestionsResponse } from '../types/questions';
+import { SubjectResponse } from '../types/subjects';
+import { UserInfoResponse } from '../types/user-info';
 
 export const getUserInfo = async () => {
-  const response = await fetch("/api/user-info");
+  const response = await fetch('/api/user-info');
 
   if (!response.ok) {
-    throw new Error("Failed to fetch User Data");
+    throw new Error('Failed to fetch User Data');
   }
 
-  const payload: ApiResponse<UserInfoResponse> = await response.json();
+  const payload: ApiResponse<UserInfoResponse> =
+    await response.json();
 
-  if ("code" in payload) {
+  if ('code' in payload) {
     throw new Error(payload.message);
   }
 
@@ -24,31 +25,37 @@ export const getSubjects = async ({
 }: {
   pageParam?: number;
 }) => {
-  const response = await fetch(`/api/subjects?page=${pageParam}&limit=4`);
+  const response = await fetch(
+    `/api/subjects?page=${pageParam}&limit=4`,
+  );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch subjects");
+    throw new Error('Failed to fetch subjects');
   }
 
-  const payload: ApiResponse<SubjectResponse> = await response.json();
+  const payload: ApiResponse<SubjectResponse> =
+    await response.json();
 
-  if ("code" in payload) {
+  if ('code' in payload) {
     throw new Error(payload.message);
   }
 
   return payload;
 };
 
-export const getExams = async () => {
-  const response = await fetch(`/api/exams`);
+export const getExams = async (subjectId: string) => {
+  const response = await fetch(
+    `/api/exams?subject=${subjectId}`,
+  );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch Exams");
+    throw new Error('Failed to fetch Exams');
   }
 
-  const payload: ApiResponse<ExamResponse> = await response.json();
+  const payload: ApiResponse<ExamResponse> =
+    await response.json();
 
-  if ("code" in payload) {
+  if ('code' in payload) {
     throw new Error(payload.message);
   }
 
@@ -56,14 +63,17 @@ export const getExams = async () => {
 };
 
 export const getQuestions = async (examId: string) => {
-  const response = await fetch(`/api/questions?exam=${examId}`);
+  const response = await fetch(
+    `/api/questions?exam=${examId}`,
+  );
   if (!response.ok) {
-    throw new Error("Failed to fetch questions");
+    throw new Error('Failed to fetch questions');
   }
 
-  const payload: ApiResponse<QuestionsResponse> = await response.json();
+  const payload: ApiResponse<QuestionsResponse> =
+    await response.json();
 
-  if ("code" in payload) {
+  if ('code' in payload) {
     throw new Error(payload.message);
   }
 

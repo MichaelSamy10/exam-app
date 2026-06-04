@@ -1,6 +1,6 @@
-import { ExamResponse } from "@/lib/types/exams";
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { ExamResponse } from '@/lib/types/exams';
+import { getToken } from 'next-auth/jwt';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,8 +11,8 @@ export async function GET(req: NextRequest) {
 
     if (!token?.accessToken) {
       return NextResponse.json(
-        { message: "token not provided" },
-        { status: 401 }
+        { message: 'token not provided' },
+        { status: 401 },
       );
     }
 
@@ -24,15 +24,16 @@ export async function GET(req: NextRequest) {
         headers: {
           token: token.accessToken,
         },
-      }
+      },
     );
 
-    const data: ApiResponse<ExamResponse> = await response.json();
+    const data: ApiResponse<ExamResponse> =
+      await response.json();
 
-    if ("code" in data) {
+    if ('code' in data) {
       return NextResponse.json(
         { message: data.message },
-        { status: data.code }
+        { status: data.code },
       );
     }
 
@@ -43,9 +44,9 @@ export async function GET(req: NextRequest) {
         message:
           error instanceof Error
             ? error.message
-            : "An unexpected error occurred",
+            : 'An unexpected error occurred',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

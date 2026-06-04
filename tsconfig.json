@@ -26,7 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(website)/dashboard/account"
+    "src/app/[locale]/(website)/dashboard/account"
   ],
   "exclude": ["node_modules"]
 }
