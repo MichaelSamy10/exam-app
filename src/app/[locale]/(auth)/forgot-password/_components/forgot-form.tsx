@@ -7,7 +7,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-import { MoveLeft, MoveRight } from 'lucide-react';
+import { CircleX, MoveLeft, MoveRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import PasswordField from './password-field';
 import {
@@ -266,7 +266,23 @@ export default function ForgotForm() {
 
               {/* Form Error */}
               {forgotForm.formState.errors.root && (
-                <FormError form={forgotForm} />
+                <div className="border border-red-600 bg-red-50 p-2">
+                  <div className="relative mx-auto">
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
+                      <CircleX
+                        className="fill-white text-red-500"
+                        width={18}
+                        height={18}
+                      />
+                    </div>
+                    <p className="text-center text-sm text-red-600">
+                      {
+                        forgotForm.formState.errors.root
+                          ?.message
+                      }
+                    </p>
+                  </div>
+                </div>
               )}
 
               <Button className="mb-9 w-full" type="submit">
@@ -356,7 +372,23 @@ export default function ForgotForm() {
                       </FormMessage>
                     )}
                     {otpForm.formState.errors.root && (
-                      <FormError form={otpForm} />
+                      <div className="border border-red-600 bg-red-50 p-2">
+                        <div className="relative mx-auto">
+                          <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
+                            <CircleX
+                              className="fill-white text-red-500"
+                              width={18}
+                              height={18}
+                            />
+                          </div>
+                          <p className="text-center text-sm text-red-600">
+                            {
+                              otpForm.formState.errors.root
+                                ?.message
+                            }
+                          </p>
+                        </div>
+                      </div>
                     )}
                   </FormItem>
                 )}
@@ -453,9 +485,23 @@ export default function ForgotForm() {
               />
 
               {/* Form Error */}
-              {resetForm.formState.errors.root && (
-                <FormError form={resetForm} />
-              )}
+              <div className="border border-red-600 bg-red-50 p-2">
+                <div className="relative mx-auto">
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
+                    <CircleX
+                      className="fill-white text-red-500"
+                      width={18}
+                      height={18}
+                    />
+                  </div>
+                  <p className="text-center text-sm text-red-600">
+                    {
+                      resetForm.formState.errors.root
+                        ?.message
+                    }
+                  </p>
+                </div>
+              </div>
 
               <Button className="mb-9 w-full" type="submit">
                 Reset Password

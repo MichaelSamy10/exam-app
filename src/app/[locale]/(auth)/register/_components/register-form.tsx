@@ -239,7 +239,7 @@ export default function RegisterForm() {
         />
 
         {/* Form Error */}
-        {error && <FormError>{error?.message}</FormError>}
+        {error?.message && <FormError error={error} />}
 
         <Button
           className="col-span-2 mb-9 mt-4 w-full"

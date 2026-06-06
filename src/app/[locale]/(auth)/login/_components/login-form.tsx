@@ -135,7 +135,7 @@ export default function LoginForm() {
         </div>
 
         {/* Form Error */}
-        {error && <FormError>{error?.message}</FormError>}
+        {error?.message && <FormError error={error} />}
 
         <Button
           className="w-full"

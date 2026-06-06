@@ -36,7 +36,7 @@ export default function Profile() {
   const router = useRouter();
 
   // Query
-  const { data, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ['UserInfo'],
     queryFn: () => getUserInfo(),
     refetchOnWindowFocus: false,
@@ -129,74 +129,24 @@ export default function Profile() {
   return (
     <Form {...form}>
       <form
-          onSubmit={form.handleSubmit(handleEdit)}
-          className="flex min-h-screen flex-col gap-4 bg-background p-6"
-        >
-          <div className="grid-cols-2 gap-2 lg:grid">
-            {/* First Name */}
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel>{t('firstname')}</FormLabel>
-
-                  {/* Field */}
-                  <FormControl>
-                    <Input
-                      {...field}
-                      hasError={Boolean(fieldState.error)}
-                    />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Last Name */}
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel className="mt-3 lg:m-0">
-                    {t('lastname')}
-                  </FormLabel>
-
-                  {/* Field */}
-                  <FormControl>
-                    <Input
-                      {...field}
-                      hasError={Boolean(fieldState.error)}
-                    />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Username */}
+        onSubmit={form.handleSubmit(handleEdit)}
+        className="flex min-h-screen flex-col gap-4 bg-background p-6"
+      >
+        <div className="grid-cols-2 gap-2 lg:grid">
+          {/* First Name */}
           <FormField
             control={form.control}
-            name="username"
+            name="firstName"
             render={({ field, fieldState }) => (
               <FormItem>
                 {/* Label */}
-                <FormLabel>{t('username')}</FormLabel>
+                <FormLabel>{t('firstname')}</FormLabel>
 
                 {/* Field */}
                 <FormControl>
                   <Input
                     {...field}
                     hasError={Boolean(fieldState.error)}
-                    autoComplete="off"
                   />
                 </FormControl>
 
@@ -206,20 +156,21 @@ export default function Profile() {
             )}
           />
 
-          {/* Email */}
+          {/* Last Name */}
           <FormField
             control={form.control}
-            name="email"
+            name="lastName"
             render={({ field, fieldState }) => (
               <FormItem>
                 {/* Label */}
-                <FormLabel>{t('email')}</FormLabel>
+                <FormLabel className="mt-3 lg:m-0">
+                  {t('lastname')}
+                </FormLabel>
 
                 {/* Field */}
                 <FormControl>
                   <Input
                     {...field}
-                    type="email"
                     hasError={Boolean(fieldState.error)}
                   />
                 </FormControl>
@@ -229,46 +180,91 @@ export default function Profile() {
               </FormItem>
             )}
           />
+        </div>
 
-          {/* Phone */}
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                {/* Label */}
-                <FormLabel>{t('phone')}</FormLabel>
+        {/* Username */}
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              {/* Label */}
+              <FormLabel>{t('username')}</FormLabel>
 
-                {/* Field */}
-                <FormControl>
-                  <PhoneInput
-                    maxLength={11}
-                    {...field}
-                    hasError={Boolean(fieldState.error)}
-                    autoComplete="off"
-                  />
-                </FormControl>
+              {/* Field */}
+              <FormControl>
+                <Input
+                  {...field}
+                  hasError={Boolean(fieldState.error)}
+                  autoComplete="off"
+                />
+              </FormControl>
 
-                {/* Feedback */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Form Error */}
-          {form.formState.errors.root && (
-            <FormError form={form} />
+              {/* Feedback */}
+              <FormMessage />
+            </FormItem>
           )}
+        />
 
-          <div className="grid-row-2 mb-9 mt-4 grid gap-2 lg:grid-cols-2">
-            {/* Show Delete Dialog */}
-            <DeleteDialog handleDelete={handleDelete} />
+        {/* Email */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              {/* Label */}
+              <FormLabel>{t('email')}</FormLabel>
 
-            <Button type="submit">
-              {t('save-changes')}
-            </Button>
-          </div>
-        </form>
+              {/* Field */}
+              <FormControl>
+                <Input
+                  {...field}
+                  type="email"
+                  hasError={Boolean(fieldState.error)}
+                />
+              </FormControl>
+
+              {/* Feedback */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Phone */}
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              {/* Label */}
+              <FormLabel>{t('phone')}</FormLabel>
+
+              {/* Field */}
+              <FormControl>
+                <PhoneInput
+                  maxLength={11}
+                  {...field}
+                  hasError={Boolean(fieldState.error)}
+                  autoComplete="off"
+                />
+              </FormControl>
+
+              {/* Feedback */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Form Error */}
+        {error?.message && <FormError error={error} />}
+
+        <div className="grid-row-2 mb-9 mt-4 grid gap-2 lg:grid-cols-2">
+          {/* Show Delete Dialog */}
+          <DeleteDialog handleDelete={handleDelete} />
+
+          <Button type="submit">{t('save-changes')}</Button>
+        </div>
+      </form>
     </Form>
   );
 }

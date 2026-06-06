@@ -50,6 +50,7 @@ export default function DiplomaCard() {
           dataLength={subjects.length}
           next={fetchNextPage}
           hasMore={!!hasNextPage}
+          className="overflow-x-hidden"
           loader={
             <div className="my-6 flex h-16 flex-col items-center justify-center">
               <p className="text-center text-secondary">
@@ -68,12 +69,12 @@ export default function DiplomaCard() {
             </p>
           }
         >
-          <div className="grid grid-cols-2 gap-x-2 gap-y-5 xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-5 xl:grid-cols-3">
             {subjects.map(subject => (
               <Link
                 key={subject._id}
                 href={`/dashboard/${subject._id}`}
-                className="relative h-64 xl:h-[448px] xl:w-[336px]"
+                className="relative h-64 xl:h-[448px]"
               >
                 <Image
                   src={subject.icon}
