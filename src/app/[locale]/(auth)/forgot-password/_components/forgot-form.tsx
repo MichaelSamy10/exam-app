@@ -32,7 +32,6 @@ import {
   forgotPasswordSchema,
   resetSchema,
 } from '@/lib/schemas/auth.schema';
-import FormError from '@/components/shared/form-error';
 import {
   getOtpCookie,
   setOtpCookie,

@@ -1,8 +1,4 @@
 import { CircleX } from 'lucide-react';
-import {
-  FieldValues,
-  UseFormReturn,
-} from 'react-hook-form';
 
 type FormErrorProps = {
   error: Error | null;

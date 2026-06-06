@@ -1,7 +1,6 @@
 'use client';
 
 import PasswordField from '@/app/[locale]/(auth)/forgot-password/_components/password-field';
-import FormError from '@/components/shared/form-error';
 import { Button } from '@/components/ui/button';
 import {
   Form,
