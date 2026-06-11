@@ -160,20 +160,22 @@ export default function ChangePassword() {
         />
 
         {/* Form Error */}
-        <div className="border border-red-600 bg-red-50 p-2">
-          <div className="relative mx-auto">
-            <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
-              <CircleX
-                className="fill-white text-red-500"
-                width={18}
-                height={18}
-              />
+        {form.formState.errors.root && (
+          <div className="border border-red-600 bg-red-50 p-2">
+            <div className="relative mx-auto">
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full p-2">
+                <CircleX
+                  className="fill-white text-red-500"
+                  width={18}
+                  height={18}
+                />
+              </div>
+              <p className="text-center text-sm text-red-600">
+                {form.formState.errors.root?.message}
+              </p>
             </div>
-            <p className="text-center text-sm text-red-600">
-              {form.formState.errors.root?.message}
-            </p>
           </div>
-        </div>
+        )}
 
         <Button className="mb-9 mt-4 w-full" type="submit">
           {t('update-password-btn')}

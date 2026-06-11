@@ -24,6 +24,7 @@ export default async function middleware(req: NextRequest) {
   );
 
   const token = await getToken({ req });
+
   const locale =
     routing.locales.find(l =>
       pathname.startsWith(`/${l}`),
